@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve"><value>Diário Livre</value></data>
+  <data name="AppSubtitle" xml:space="preserve"><value>Offline Teacher Gradebook</value></data>
+  <data name="NavDashboard" xml:space="preserve"><value>Classrooms</value></data>
+  <data name="NavGradebook" xml:space="preserve"><value>Gradebook</value></data>
+  <data name="NavAttendance" xml:space="preserve"><value>Attendance</value></data>
+  <data name="NavDossier" xml:space="preserve"><value>Student Dossier</value></data>
+  <data name="ActiveClassroomLabel" xml:space="preserve"><value>Active classroom</value></data>
+  <data name="ThemeToggleLabel" xml:space="preserve"><value>Light / Dark Theme</value></data>
+  <data name="LanguageLabel" xml:space="preserve"><value>Language</value></data>
+  <data name="OfflineBadge" xml:space="preserve"><value>Offline-First • Local SQLite</value></data>
+
+  <data name="DashboardTitle" xml:space="preserve"><value>Classrooms Dashboard</value></data>
+  <data name="DashboardSubtitle" xml:space="preserve"><value>Select an academic year to manage grades, attendance, and class council records.</value></data>
+  <data name="AcademicYearLabel" xml:space="preserve"><value>Academic Year</value></data>
+  <data name="SchoolLabel" xml:space="preserve"><value>School</value></data>
+  <data name="GradingSystemLabel" xml:space="preserve"><value>Grading System</value></data>
+  <data name="PassingGradeLabel" xml:space="preserve"><value>Passing Grade</value></data>
+  <data name="MinAttendanceLabel" xml:space="preserve"><value>LDB Attendance</value></data>
+  <data name="NewClassroomButton" xml:space="preserve"><value>+ New Classroom</value></data>
+  <data name="ClassroomNameLabel" xml:space="preserve"><value>Classroom Name</value></data>
+  <data name="ClassroomNameWatermark" xml:space="preserve"><value>e.g. 8th Grade A</value></data>
+  <data name="ShiftLabel" xml:space="preserve"><value>Shift</value></data>
+  <data name="IsMultiSubjectLabel" xml:space="preserve"><value>Polyvalent (Elementary I — single daily roll call)</value></data>
+  <data name="CreateClassroomButton" xml:space="preserve"><value>Create Classroom</value></data>
+  <data name="CancelButton" xml:space="preserve"><value>Cancel</value></data>
+  <data name="StudentsCountLabel" xml:space="preserve"><value>students</value></data>
+  <data name="SubjectsCountLabel" xml:space="preserve"><value>subjects</value></data>
+  <data name="AlertsCountLabel" xml:space="preserve"><value>LDB alerts</value></data>
+  <data name="PolyvalentBadge" xml:space="preserve"><value>Polyvalent</value></data>
+  <data name="SpecialistBadge" xml:space="preserve"><value>Specialist</value></data>
+  <data name="OpenGradebookAction" xml:space="preserve"><value>Grades</value></data>
+  <data name="OpenAttendanceAction" xml:space="preserve"><value>Roll Call</value></data>
+  <data name="OpenDossierAction" xml:space="preserve"><value>Dossier</value></data>
+
+  <data name="GradebookTitle" xml:space="preserve"><value>Gradebook</value></data>
+  <data name="GradebookSubtitle" xml:space="preserve"><value>Spreadsheet-style grading with instant term calculation and below-passing alerts.</value></data>
+  <data name="ClassroomLabel" xml:space="preserve"><value>Classroom</value></data>
+  <data name="SubjectLabel" xml:space="preserve"><value>Subject</value></data>
+  <data name="TermLabel" xml:space="preserve"><value>Term</value></data>
+  <data name="CalculationModeLabel" xml:space="preserve"><value>Calculation</value></data>
+  <data name="RecoveryPolicyLabel" xml:space="preserve"><value>Recovery</value></data>
+  <data name="AddAssessmentButton" xml:space="preserve"><value>+ New Assessment</value></data>
+  <data name="SaveGradesButton" xml:space="preserve"><value>Save Grades</value></data>
+  <data name="AssessmentTitleLabel" xml:space="preserve"><value>Title</value></data>
+  <data name="MaxScoreLabel" xml:space="preserve"><value>Max Score</value></data>
+  <data name="WeightLabel" xml:space="preserve"><value>Weight</value></data>
+  <data name="IsRecoveryLabel" xml:space="preserve"><value>Is recovery?</value></data>
+  <data name="CreateAssessmentButton" xml:space="preserve"><value>Add</value></data>
+  <data name="StudentColumnHeader" xml:space="preserve"><value>Student</value></data>
+  <data name="TermScoreColumnHeader" xml:space="preserve"><value>Term Score</value></data>
+  <data name="StatusColumnHeader" xml:space="preserve"><value>Status</value></data>
+  <data name="PendingHint" xml:space="preserve"><value>Blank cell = pending • 0 = zero score</value></data>
+  <data name="SavedSuccessMessage" xml:space="preserve"><value>Changes saved successfully!</value></data>
+
+  <data name="AttendanceTitle" xml:space="preserve"><value>Quick Attendance</value></data>
+  <data name="AttendanceSubtitle" xml:space="preserve"><value>Fast roll call with real-time LDB 75% absence percentage monitoring.</value></data>
+  <data name="DateLabel" xml:space="preserve"><value>Date</value></data>
+  <data name="LessonCountLabel" xml:space="preserve"><value>Lessons (block)</value></data>
+  <data name="TopicCoveredLabel" xml:space="preserve"><value>Topic Covered</value></data>
+  <data name="TopicCoveredWatermark" xml:space="preserve"><value>Describe the lesson content taught...</value></data>
+  <data name="MarkAllPresentButton" xml:space="preserve"><value>Mark All Present</value></data>
+  <data name="SaveAttendanceButton" xml:space="preserve"><value>Save Attendance</value></data>
+  <data name="SingleDailyRollCallNote" xml:space="preserve"><value>Single daily roll call (Elementary I Polyvalent)</value></data>
+  <data name="PresentCode" xml:space="preserve"><value>P</value></data>
+  <data name="AbsentCode" xml:space="preserve"><value>A</value></data>
+  <data name="JustifiedCode" xml:space="preserve"><value>JA</value></data>
+  <data name="AbsencePercentageLabel" xml:space="preserve"><value>Absences</value></data>
+
+  <data name="DossierTitle" xml:space="preserve"><value>Student Dossier — Class Council</value></data>
+  <data name="DossierSubtitle" xml:space="preserve"><value>Consolidated academic performance, LDB attendance, IEP/PDI flag, and observations.</value></data>
+  <data name="SearchStudentWatermark" xml:space="preserve"><value>Search student...</value></data>
+  <data name="ChangePhotoButton" xml:space="preserve"><value>Change Photo</value></data>
+  <data name="ExportPdfButton" xml:space="preserve"><value>Export PDF</value></data>
+  <data name="SpecialNeedsPdiLabel" xml:space="preserve"><value>Student with PDI / Special Needs Plan</value></data>
+  <data name="GeneralNotesLabel" xml:space="preserve"><value>General Notes / Recommendations</value></data>
+  <data name="SaveProfileButton" xml:space="preserve"><value>Save Profile</value></data>
+  <data name="AttendanceSummaryTitle" xml:space="preserve"><value>Cumulative Attendance (LDB 75%)</value></data>
+  <data name="TotalLessonsLabel" xml:space="preserve"><value>Total Lessons</value></data>
+  <data name="PresentLessonsLabel" xml:space="preserve"><value>Present</value></data>
+  <data name="UnexcusedAbsencesLabel" xml:space="preserve"><value>Unexcused</value></data>
+  <data name="JustifiedAbsencesLabel" xml:space="preserve"><value>Justified</value></data>
+  <data name="AttendanceRateLabel" xml:space="preserve"><value>Attendance</value></data>
+  <data name="GradesSummaryTitle" xml:space="preserve"><value>Performance by Subject</value></data>
+  <data name="FinalGradeLabel" xml:space="preserve"><value>Final</value></data>
+  <data name="ObservationsTimelineTitle" xml:space="preserve"><value>Observations Timeline</value></data>
+  <data name="ObservationCategoryLabel" xml:space="preserve"><value>Category</value></data>
+  <data name="ObservationContentWatermark" xml:space="preserve"><value>Record a pedagogical note, praise, or family contact...</value></data>
+  <data name="AddObservationButton" xml:space="preserve"><value>Add Observation</value></data>
+  <data name="DeleteButton" xml:space="preserve"><value>Delete</value></data>
+  <data name="NoObservationsText" xml:space="preserve"><value>No observations recorded for this student.</value></data>
+  <data name="PdfExportedMessage" xml:space="preserve"><value>PDF report exported successfully!</value></data>
+
+  <data name="ShiftMorning" xml:space="preserve"><value>Morning</value></data>
+  <data name="ShiftAfternoon" xml:space="preserve"><value>Afternoon</value></data>
+  <data name="ShiftNight" xml:space="preserve"><value>Night</value></data>
+  <data name="ShiftFullTime" xml:space="preserve"><value>Full Time</value></data>
+
+  <data name="GradingBimonthly" xml:space="preserve"><value>Bimonthly</value></data>
+  <data name="GradingTrimester" xml:space="preserve"><value>Trimester</value></data>
+  <data name="GradingSemester" xml:space="preserve"><value>Semester</value></data>
+
+  <data name="ModeSimpleSum" xml:space="preserve"><value>Simple Sum</value></data>
+  <data name="ModeWeightedAverage" xml:space="preserve"><value>Weighted Average</value></data>
+
+  <data name="RecoveryReplaceLowest" xml:space="preserve"><value>Replace Lowest</value></data>
+  <data name="RecoveryAverageWith" xml:space="preserve"><value>Average with Recovery</value></data>
+
+  <data name="CategoryPedagogical" xml:space="preserve"><value>Pedagogical</value></data>
+  <data name="CategoryBehavioral" xml:space="preserve"><value>Behavioral</value></data>
+  <data name="CategoryPraise" xml:space="preserve"><value>Praise</value></data>
+  <data name="CategoryFamilyContact" xml:space="preserve"><value>Family Contact</value></data>
+
+  <data name="AlertNormal" xml:space="preserve"><value>Normal</value></data>
+  <data name="AlertWarning" xml:space="preserve"><value>Warning (≥ 20%)</value></data>
+  <data name="AlertCritical" xml:space="preserve"><value>Critical (&gt; 25%)</value></data>
+
+  <data name="PassingStatus" xml:space="preserve"><value>Passing</value></data>
+  <data name="BelowPassingStatus" xml:space="preserve"><value>Below Passing</value></data>
+  <data name="PendingStatus" xml:space="preserve"><value>Pending</value></data>
+  <data name="TermPrefix" xml:space="preserve"><value>Term</value></data>
+
+  <data name="LightModeButton" xml:space="preserve"><value>Light Mode</value></data>
+  <data name="DarkModeButton" xml:space="preserve"><value>Dark Mode</value></data>
+  <data name="TotalClassroomsKpi" xml:space="preserve"><value>Active Classrooms</value></data>
+  <data name="TotalStudentsKpi" xml:space="preserve"><value>Total Students</value></data>
+  <data name="TotalAlertsKpi" xml:space="preserve"><value>LDB Alerts</value></data>
+  <data name="NewAcademicYearButton" xml:space="preserve"><value>+ New Academic Year</value></data>
+  <data name="YearLabel" xml:space="preserve"><value>Year</value></data>
+  <data name="SchoolNameWatermark" xml:space="preserve"><value>e.g. Lincoln High School</value></data>
+  <data name="CreateAcademicYearButton" xml:space="preserve"><value>Create Year</value></data>
+
+  <data name="AddSubjectButton" xml:space="preserve"><value>+ Subject</value></data>
+  <data name="SubjectNameLabel" xml:space="preserve"><value>Subject Name</value></data>
+  <data name="SubjectNameWatermark" xml:space="preserve"><value>e.g. History</value></data>
+  <data name="CreateSubjectButton" xml:space="preserve"><value>Add Subject</value></data>
+  <data name="ClassAverageLabel" xml:space="preserve"><value>Class Average</value></data>
+  <data name="PassingCountLabel" xml:space="preserve"><value>Passing</value></data>
+  <data name="BelowPassingCountLabel" xml:space="preserve"><value>Below Passing</value></data>
+  <data name="PendingCountLabel" xml:space="preserve"><value>Pending</value></data>
+  <data name="UnsavedChangesBadge" xml:space="preserve"><value>Unsaved changes</value></data>
+  <data name="RecoveryAppliedTag" xml:space="preserve"><value>Rec</value></data>
+  <data name="InvalidGradesWarning" xml:space="preserve"><value>Fix highlighted invalid cells before saving.</value></data>
+  <data name="DeleteAssessmentButton" xml:space="preserve"><value>Delete Assessment</value></data>
+
+  <data name="RecentSessionsLabel" xml:space="preserve"><value>Recent sessions:</value></data>
+  <data name="TodayButton" xml:space="preserve"><value>Today</value></data>
+  <data name="PresentCountLabel" xml:space="preserve"><value>Present</value></data>
+  <data name="AbsentCountLabel" xml:space="preserve"><value>Absent</value></data>
+  <data name="JustifiedCountLabel" xml:space="preserve"><value>Justified</value></data>
+  <data name="AlertsBadgeLabel" xml:space="preserve"><value>LDB Alerts</value></data>
+
+  <data name="AddStudentButton" xml:space="preserve"><value>+ New Student</value></data>
+  <data name="StudentFullNameLabel" xml:space="preserve"><value>Full Name</value></data>
+  <data name="StudentFullNameWatermark" xml:space="preserve"><value>e.g. Lucas Gabriel Souza</value></data>
+  <data name="RollNumberLabel" xml:space="preserve"><value>Roll #</value></data>
+  <data name="CreateStudentButton" xml:space="preserve"><value>Enroll</value></data>
+  <data name="AllCategoriesFilter" xml:space="preserve"><value>All</value></data>
+  <data name="NoStudentsFoundText" xml:space="preserve"><value>No students found in this classroom.</value></data>
+  <data name="PdfSpecialNeedsBanner" xml:space="preserve"><value>PDI / Special Educational Needs Flag Active</value></data>
+  <data name="PdfNoSubjectsText" xml:space="preserve"><value>No subjects registered.</value></data>
+  <data name="PdfGeneratedAtLabel" xml:space="preserve"><value>Generated on</value></data>
+  <data name="PdfTermShortPrefix" xml:space="preserve"><value>T</value></data>
+
+  <data name="NavSettings" xml:space="preserve"><value>Settings</value></data>
+  <data name="ShortcutsHint" xml:space="preserve"><value>Ctrl+1..7 navigate • Ctrl+S save</value></data>
+
+  <data name="RiskSpotlightTitle" xml:space="preserve"><value>LDB Risk Spotlight — Attendance Alerts</value></data>
+  <data name="NoAtRiskStudentsText" xml:space="preserve"><value>No students currently flagged for attendance alerts.</value></data>
+  <data name="OpenDossierShort" xml:space="preserve"><value>Open Dossier</value></data>
+  <data name="AttendanceHealthLabel" xml:space="preserve"><value>Attendance Health</value></data>
+  <data name="ConfirmDeleteButton" xml:space="preserve"><value>Confirm?</value></data>
+
+  <data name="FinalScoreColumnHeader" xml:space="preserve"><value>Final Score</value></data>
+  <data name="ExportCsvButton" xml:space="preserve"><value>Export CSV</value></data>
+  <data name="ExportClassPdfButton" xml:space="preserve"><value>Class PDF</value></data>
+  <data name="ClassGradebookReportTitle" xml:space="preserve"><value>Class Gradebook Report</value></data>
+  <data name="CsvExportedMessage" xml:space="preserve"><value>CSV spreadsheet exported successfully!</value></data>
+  <data name="RollColumnHeader" xml:space="preserve"><value>#</value></data>
+
+  <data name="InvertButton" xml:space="preserve"><value>Invert P/A</value></data>
+  <data name="LessonLogToggleButton" xml:space="preserve"><value>Lesson Log</value></data>
+  <data name="ExportAttendancePdfButton" xml:space="preserve"><value>Attendance PDF</value></data>
+  <data name="LessonLogEmptyText" xml:space="preserve"><value>No sessions recorded for this selection.</value></data>
+  <data name="ClassAttendanceReportTitle" xml:space="preserve"><value>Class Attendance &amp; Lesson Log Report</value></data>
+  <data name="StudentsSummaryReportTitle" xml:space="preserve"><value>Student Attendance Summary (LDB 75%)</value></data>
+  <data name="LessonLogReportTitle" xml:space="preserve"><value>Lesson &amp; Topic Covered Log</value></data>
+  <data name="LessonsCountShort" xml:space="preserve"><value>Lessons</value></data>
+  <data name="SessionDeletedMessage" xml:space="preserve"><value>Attendance session deleted.</value></data>
+
+  <data name="ImportListButton" xml:space="preserve"><value>Import List</value></data>
+  <data name="BatchImportHint" xml:space="preserve"><value>Paste one name per line (e.g. 01 - Ana Clara Silva) or load a .txt/.csv file:</value></data>
+  <data name="BatchImportWatermark" xml:space="preserve"><value>01 - Ana Clara Silva&#10;02 - Bruno Costa&#10;Carla Oliveira</value></data>
+  <data name="LoadFileButton" xml:space="preserve"><value>Load File</value></data>
+  <data name="ImportStudentsAction" xml:space="preserve"><value>Enroll All</value></data>
+  <data name="BatchPreviewCount" xml:space="preserve"><value>students detected</value></data>
+  <data name="BatchImportedMessage" xml:space="preserve"><value>Student roster imported successfully!</value></data>
+  <data name="RemovePhotoButton" xml:space="preserve"><value>Remove Photo</value></data>
+  <data name="DeleteStudentButton" xml:space="preserve"><value>Delete Student</value></data>
+  <data name="StudentDeletedMessage" xml:space="preserve"><value>Student removed from classroom.</value></data>
+
+  <data name="SettingsTitle" xml:space="preserve"><value>Settings &amp; Backup</value></data>
+  <data name="SettingsSubtitle" xml:space="preserve"><value>Configure academic year rules, appearance, language, and protect your offline data.</value></data>
+  <data name="AcademicYearSettingsTitle" xml:space="preserve"><value>Active Academic Year Settings</value></data>
+  <data name="DefaultModeLabel" xml:space="preserve"><value>Default Grade Mode</value></data>
+  <data name="DefaultRecoveryLabel" xml:space="preserve"><value>Default Recovery Policy</value></data>
+  <data name="SaveSettingsButton" xml:space="preserve"><value>Save Settings</value></data>
+  <data name="AppearanceLanguageTitle" xml:space="preserve"><value>Appearance &amp; Language</value></data>
+  <data name="StorageBackupTitle" xml:space="preserve"><value>Offline Storage &amp; Backup (.zip)</value></data>
+  <data name="DatabasePathLabel" xml:space="preserve"><value>Local Database</value></data>
+  <data name="DatabaseSizeLabel" xml:space="preserve"><value>Size</value></data>
+  <data name="AvatarsCountLabel" xml:space="preserve"><value>256px Avatars</value></data>
+  <data name="GradesCountLabel" xml:space="preserve"><value>Grades Recorded</value></data>
+  <data name="SessionsCountLabel" xml:space="preserve"><value>Sessions</value></data>
+  <data name="ObservationsCountLabel" xml:space="preserve"><value>Observations</value></data>
+  <data name="ExportBackupButton" xml:space="preserve"><value>Export Backup (.zip)</value></data>
+  <data name="RestoreBackupButton" xml:space="preserve"><value>Restore Backup (.zip)</value></data>
+  <data name="OpenDataFolderButton" xml:space="preserve"><value>Open Data Folder</value></data>
+  <data name="BackupExportedMessage" xml:space="preserve"><value>Backup .zip exported successfully!</value></data>
+  <data name="BackupRestoredMessage" xml:space="preserve"><value>Backup restored successfully!</value></data>
+  <data name="BackupRestoreErrorMessage" xml:space="preserve"><value>Could not restore backup:</value></data>
+
+  <data name="SemesterSingular" xml:space="preserve"><value>Semester</value></data>
+  <data name="BimesterSingular" xml:space="preserve"><value>Bimester</value></data>
+  <data name="TrimesterSingular" xml:space="preserve"><value>Trimester</value></data>
+  <data name="SemesterShort" xml:space="preserve"><value>S</value></data>
+  <data name="BimesterShort" xml:space="preserve"><value>B</value></data>
+  <data name="TrimesterShort" xml:space="preserve"><value>T</value></data>
+  <data name="AllYearPeriodOption" xml:space="preserve"><value>Full Year (LDB)</value></data>
+  <data name="ActivePeriodLabel" xml:space="preserve"><value>Active Period</value></data>
+  <data name="DailyActivityLabel" xml:space="preserve"><value>Daily Activity</value></data>
+  <data name="DailyActivityWatermark" xml:space="preserve"><value>e.g., Worksheet p. 42, pair work, hands-on activity...</value></data>
+  <data name="HomeworkLabel" xml:space="preserve"><value>Homework</value></data>
+  <data name="HomeworkWatermark" xml:space="preserve"><value>e.g., Complete exercises 1-5 for next class...</value></data>
+  <data name="LessonNotesLabel" xml:space="preserve"><value>Lesson Notes</value></data>
+  <data name="LessonNotesWatermark" xml:space="preserve"><value>Class notes, resources used, follow-ups for next lesson...</value></data>
+  <data name="MoreLessonDetailsButton" xml:space="preserve"><value>Homework &amp; Notes</value></data>
+  <data name="QuickActivityTagsLabel" xml:space="preserve"><value>Quick tags:</value></data>
+  <data name="ActivityTagExercises" xml:space="preserve"><value>Exercises</value></data>
+  <data name="ActivityTagGroupWork" xml:space="preserve"><value>Group Work</value></data>
+  <data name="ActivityTagReading" xml:space="preserve"><value>Reading</value></data>
+  <data name="ActivityTagDiscussion" xml:space="preserve"><value>Discussion</value></data>
+  <data name="ActivityTagPractice" xml:space="preserve"><value>Hands-on Lab</value></data>
+  <data name="ActivityTagReview" xml:space="preserve"><value>Review</value></data>
+  <data name="PeriodLessonsLabel" xml:space="preserve"><value>Period lessons</value></data>
+
+  <data name="NavCalendar" xml:space="preserve"><value>Calendar</value></data>
+  <data name="CalendarTitle" xml:space="preserve"><value>School Calendar (200 School Days)</value></data>
+  <data name="CalendarSubtitle" xml:space="preserve"><value>Track school days progress, holidays, recesses, and school Saturdays.</value></data>
+  <data name="SchoolDaysLabel" xml:space="preserve"><value>School Days</value></data>
+  <data name="TargetSchoolDaysLabel" xml:space="preserve"><value>Target School Days</value></data>
+  <data name="RecordedSchoolDaysKpi" xml:space="preserve"><value>Recorded School Days</value></data>
+  <data name="RemainingSchoolDaysKpi" xml:space="preserve"><value>Remaining to Goal</value></data>
+  <data name="PlannedMonthDaysKpi" xml:space="preserve"><value>Planned This Month</value></data>
+  <data name="SchoolSaturdaysKpi" xml:space="preserve"><value>School Saturdays</value></data>
+  <data name="NonSchoolDaysKpi" xml:space="preserve"><value>Holidays / Recesses</value></data>
+  <data name="ImportBrazilHolidaysButton" xml:space="preserve"><value>Import Brazil Holidays</value></data>
+  <data name="HolidaysImportedMessage" xml:space="preserve"><value>National holidays added to calendar!</value></data>
+  <data name="NoNewHolidaysMessage" xml:space="preserve"><value>All national holidays are already registered.</value></data>
+  <data name="AddCalendarEventTitle" xml:space="preserve"><value>Add Calendar Event</value></data>
+  <data name="EventTypeLabel" xml:space="preserve"><value>Type</value></data>
+  <data name="EventTitleLabel" xml:space="preserve"><value>Title</value></data>
+  <data name="EventTitleWatermark" xml:space="preserve"><value>e.g., School Saturday — Science Fair</value></data>
+  <data name="EventNotesLabel" xml:space="preserve"><value>Notes (optional)</value></data>
+  <data name="AddEventButton" xml:space="preserve"><value>Add Event</value></data>
+  <data name="EventsListTitle" xml:space="preserve"><value>Period Events</value></data>
+  <data name="NoCalendarEventsText" xml:space="preserve"><value>No events registered for this period.</value></data>
+  <data name="SelectedDateSessionsLabel" xml:space="preserve"><value>Lessons recorded on this date</value></data>
+  <data name="NoLessonsOnDateText" xml:space="preserve"><value>No roll call saved on this date.</value></data>
+  <data name="OpenCalendarButton" xml:space="preserve"><value>Open Calendar</value></data>
+  <data name="EventTypeHoliday" xml:space="preserve"><value>Holiday</value></data>
+  <data name="EventTypeRecess" xml:space="preserve"><value>Recess / Break</value></data>
+  <data name="EventTypeSchoolSaturday" xml:space="preserve"><value>School Saturday</value></data>
+  <data name="EventTypePedagogicalDay" xml:space="preserve"><value>Pedagogical Day</value></data>
+  <data name="EventTypeExtraSchoolDay" xml:space="preserve"><value>Makeup School Day</value></data>
+  <data name="WeekdaySunShort" xml:space="preserve"><value>Sun</value></data>
+  <data name="WeekdayMonShort" xml:space="preserve"><value>Mon</value></data>
+  <data name="WeekdayTueShort" xml:space="preserve"><value>Tue</value></data>
+  <data name="WeekdayWedShort" xml:space="preserve"><value>Wed</value></data>
+  <data name="WeekdayThuShort" xml:space="preserve"><value>Thu</value></data>
+  <data name="WeekdayFriShort" xml:space="preserve"><value>Fri</value></data>
+  <data name="WeekdaySatShort" xml:space="preserve"><value>Sat</value></data>
+  <data name="WeekendLabel" xml:space="preserve"><value>Weekend</value></data>
+  <data name="SelectedDateLabel" xml:space="preserve"><value>Selected Date</value></data>
+
+  <data name="NavPlanner" xml:space="preserve"><value>Planner</value></data>
+  <data name="TodaysClassesTitle" xml:space="preserve"><value>Today's Classes</value></data>
+  <data name="NoTodaysClassesText" xml:space="preserve"><value>No classes scheduled on your timetable for today.</value></data>
+  <data name="StartAttendanceButton" xml:space="preserve"><value>Take Attendance</value></data>
+  <data name="OpenTimetableButton" xml:space="preserve"><value>Configure Timetable</value></data>
+
+  <data name="ExportCouncilPdfButton" xml:space="preserve"><value>Council Sheet PDF</value></data>
+  <data name="ExportBatchDossiersButton" xml:space="preserve"><value>Batch Report Cards</value></data>
+  <data name="CouncilReportTitle" xml:space="preserve"><value>Class Council Summary Sheet</value></data>
+  <data name="CouncilPdiColumn" xml:space="preserve"><value>IEP / PDI</value></data>
+  <data name="CouncilOverallColumn" xml:space="preserve"><value>Overall</value></data>
+  <data name="CouncilNotesColumn" xml:space="preserve"><value>Pedagogical Summary</value></data>
+  <data name="YesShort" xml:space="preserve"><value>Yes</value></data>
+  <data name="NoShort" xml:space="preserve"><value>—</value></data>
+
+  <data name="PlannerTitle" xml:space="preserve"><value>Planner, Timetable &amp; Seating</value></data>
+  <data name="PlannerSubtitle" xml:space="preserve"><value>Manage your weekly timetable, BNCC-aligned lesson plans, and classroom seating.</value></data>
+  <data name="TabSchedule" xml:space="preserve"><value>Weekly Timetable</value></data>
+  <data name="TabLessonPlans" xml:space="preserve"><value>Lesson Plans (BNCC)</value></data>
+  <data name="TabSeatingChart" xml:space="preserve"><value>Seating Chart</value></data>
+  <data name="DayOfWeekLabel" xml:space="preserve"><value>Day of Week</value></data>
+  <data name="StartTimeLabel" xml:space="preserve"><value>Start</value></data>
+  <data name="EndTimeLabel" xml:space="preserve"><value>End</value></data>
+  <data name="RoomLabel" xml:space="preserve"><value>Room (optional)</value></data>
+  <data name="AddSlotButton" xml:space="preserve"><value>Add Slot</value></data>
+  <data name="NoSlotsForDayText" xml:space="preserve"><value>Free</value></data>
+  <data name="LessonPlanTitleLabel" xml:space="preserve"><value>Lesson Topic / Title</value></data>
+  <data name="BnccCodeLabel" xml:space="preserve"><value>BNCC Code</value></data>
+  <data name="BnccCodeWatermark" xml:space="preserve"><value>e.g., EF07MA04</value></data>
+  <data name="ObjectivesLabel" xml:space="preserve"><value>Learning Objectives</value></data>
+  <data name="CreateLessonPlanButton" xml:space="preserve"><value>Save Plan</value></data>
+  <data name="ApplyToAttendanceButton" xml:space="preserve"><value>Apply to Attendance</value></data>
+  <data name="StatusPlanned" xml:space="preserve"><value>Planned</value></data>
+  <data name="StatusTaught" xml:space="preserve"><value>Taught</value></data>
+  <data name="StatusPostponed" xml:space="preserve"><value>Postponed</value></data>
+  <data name="NoLessonPlansText" xml:space="preserve"><value>No lesson plans created for this classroom.</value></data>
+  <data name="SeatingRowsLabel" xml:space="preserve"><value>Rows</value></data>
+  <data name="SeatingColumnsLabel" xml:space="preserve"><value>Columns</value></data>
+  <data name="AutoFillSeatsButton" xml:space="preserve"><value>Auto-Fill by Roll</value></data>
+  <data name="ClearSeatsButton" xml:space="preserve"><value>Clear Map</value></data>
+  <data name="SaveSeatingButton" xml:space="preserve"><value>Save Map</value></data>
+  <data name="FrontOfClassroomLabel" xml:space="preserve"><value>WHITEBOARD (FRONT OF CLASSROOM)</value></data>
+  <data name="UnassignedStudentsLabel" xml:space="preserve"><value>Unassigned students (click student, then click any desk):</value></data>
+  <data name="SeatingSwapHint" xml:space="preserve"><value>Click a desk or student to select, then click another seat to move or swap.</value></data>
+  <data name="EmptySeatLabel" xml:space="preserve"><value>Empty</value></data>
+
+  <data name="PrivacyPinTitle" xml:space="preserve"><value>Privacy, LGPD &amp; Local PIN Lock</value></data>
+  <data name="PinInputLabel" xml:space="preserve"><value>New PIN (4–8 digits)</value></data>
+  <data name="PinConfirmLabel" xml:space="preserve"><value>Confirm PIN</value></data>
+  <data name="SetPinButton" xml:space="preserve"><value>Set / Update PIN</value></data>
+  <data name="RemovePinButton" xml:space="preserve"><value>Remove PIN</value></data>
+  <data name="LockNowButton" xml:space="preserve"><value>Lock Screen</value></data>
+  <data name="PinSavedMessage" xml:space="preserve"><value>Local PIN saved successfully!</value></data>
+  <data name="PinRemovedMessage" xml:space="preserve"><value>PIN protection removed.</value></data>
+  <data name="PinValidationError" xml:space="preserve"><value>Enter matching 4–8 numeric digits in both PIN fields.</value></data>
+  <data name="LockScreenTitle" xml:space="preserve"><value>Diário Livre Locked</value></data>
+  <data name="LockScreenSubtitle" xml:space="preserve"><value>Local lock enabled to protect student records and LGPD notes.</value></data>
+  <data name="UnlockPinWatermark" xml:space="preserve"><value>Enter your PIN...</value></data>
+  <data name="UnlockButton" xml:space="preserve"><value>Unlock</value></data>
+  <data name="InvalidPinError" xml:space="preserve"><value>Incorrect PIN. Please try again.</value></data>
+
+  <data name="AutoBackupOnStartupLabel" xml:space="preserve"><value>Create automatic rolling snapshot on startup (keeps last 5)</value></data>
+  <data name="CreateSnapshotNowButton" xml:space="preserve"><value>Snapshot Now</value></data>
+  <data name="AutoBackupsTitle" xml:space="preserve"><value>Recent Auto-Backups</value></data>
+  <data name="SnapshotCreatedMessage" xml:space="preserve"><value>Auto-backup snapshot created!</value></data>
+  <data name="NoAutoBackupsText" xml:space="preserve"><value>No automatic snapshots recorded yet.</value></data>
+
+  <data name="DayMonday" xml:space="preserve"><value>Monday</value></data>
+  <data name="DayTuesday" xml:space="preserve"><value>Tuesday</value></data>
+  <data name="DayWednesday" xml:space="preserve"><value>Wednesday</value></data>
+  <data name="DayThursday" xml:space="preserve"><value>Thursday</value></data>
+  <data name="DayFriday" xml:space="preserve"><value>Friday</value></data>
+  <data name="DaySaturday" xml:space="preserve"><value>Saturday</value></data>
+  <data name="DaySunday" xml:space="preserve"><value>Sunday</value></data>
+</root>

@@ -1,0 +1,611 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DiarioLivre.Desktop.ViewModels"
+             xmlns:entities="using:DiarioLivre.Core.Entities"
+             xmlns:controls="using:DiarioLivre.Desktop.Controls"
+             xmlns:conv="using:DiarioLivre.Desktop.Converters"
+             x:Class="DiarioLivre.Desktop.Views.StudentDossierView"
+             x:DataType="vm:StudentDossierViewModel">
+
+  <Grid ColumnDefinitions="305,18,*">
+    <!-- Left Master Pane: Classroom Filter + New Student / Batch Import + Searchable Student List -->
+    <Border Grid.Column="0" Classes="card" Padding="14">
+      <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Spacing="10" Margin="0,0,0,12">
+          <StackPanel Spacing="4">
+            <TextBlock Text="{Binding Loc[ClassroomLabel]}"
+                       FontSize="11"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextMutedBrush}" />
+            <ComboBox ItemsSource="{Binding Classrooms}"
+                      SelectedItem="{Binding SelectedClassroom}"
+                      HorizontalAlignment="Stretch">
+              <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="entities:Classroom">
+                  <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+          </StackPanel>
+
+          <Grid ColumnDefinitions="*,8,*">
+            <Button Grid.Column="0"
+                    Classes="primary"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding ToggleAddStudentCommand}"
+                    Content="{Binding Loc[AddStudentButton]}" />
+            <Button Grid.Column="2"
+                    Classes="secondary"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding ToggleBatchImportCommand}"
+                    Content="{Binding Loc[ImportListButton]}" />
+          </Grid>
+
+          <!-- Inline New Student Form -->
+          <Border Background="{DynamicResource SubtleSurfaceBrush}"
+                  CornerRadius="10"
+                  Padding="12"
+                  IsVisible="{Binding IsAddingStudent}">
+            <StackPanel Spacing="10">
+              <StackPanel Spacing="4">
+                <TextBlock Text="{Binding Loc[StudentFullNameLabel]}" FontSize="11" FontWeight="SemiBold" />
+                <TextBox Text="{Binding NewStudentFullName}" Watermark="{Binding Loc[StudentFullNameWatermark]}" />
+              </StackPanel>
+              <Grid ColumnDefinitions="136,12,*">
+                <StackPanel Grid.Column="0" Spacing="4">
+                  <TextBlock Text="{Binding Loc[RollNumberLabel]}" FontSize="11" FontWeight="SemiBold" />
+                  <NumericUpDown Value="{Binding NewStudentRollNumber}" Minimum="1" Maximum="999" Increment="1" FormatString="0" />
+                </StackPanel>
+                <CheckBox Grid.Column="2"
+                          VerticalAlignment="Bottom"
+                          Margin="0,0,0,6"
+                          IsChecked="{Binding NewStudentHasSpecialNeeds}"
+                          Content="PDI" />
+              </Grid>
+              <Grid ColumnDefinitions="*,8,*">
+                <Button Grid.Column="0"
+                        Classes="secondary"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding ToggleAddStudentCommand}"
+                        Content="{Binding Loc[CancelButton]}" />
+                <Button Grid.Column="2"
+                        Classes="primary"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding CreateStudentCommand}"
+                        Content="{Binding Loc[CreateStudentButton]}" />
+              </Grid>
+            </StackPanel>
+          </Border>
+
+          <!-- Inline Batch Student Import Panel -->
+          <Border Background="{DynamicResource SubtleSurfaceBrush}"
+                  CornerRadius="10"
+                  Padding="12"
+                  IsVisible="{Binding IsBatchImporting}">
+            <StackPanel Spacing="8">
+              <TextBlock Text="{Binding Loc[BatchImportHint]}"
+                         FontSize="11"
+                         TextWrapping="Wrap"
+                         Foreground="{DynamicResource TextMutedBrush}" />
+              <TextBox Text="{Binding BatchImportText}"
+                       Watermark="{Binding Loc[BatchImportWatermark]}"
+                       AcceptsReturn="True"
+                       MinHeight="92"
+                       MaxHeight="150"
+                       TextWrapping="Wrap" />
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="{Binding BatchDetectedCount}" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" />
+                <TextBlock Text="{Binding Loc[BatchPreviewCount]}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center" />
+              </StackPanel>
+              <Button Classes="secondary"
+                      HorizontalAlignment="Stretch"
+                      HorizontalContentAlignment="Center"
+                      Click="OnLoadBatchFileClick"
+                      Content="{Binding Loc[LoadFileButton]}" />
+              <Grid ColumnDefinitions="*,8,*">
+                <Button Grid.Column="0"
+                        Classes="secondary"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding ToggleBatchImportCommand}"
+                        Content="{Binding Loc[CancelButton]}" />
+                <Button Grid.Column="2"
+                        Classes="primary"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        IsEnabled="{Binding CanBatchImport}"
+                        Command="{Binding ImportBatchStudentsCommand}"
+                        Content="{Binding Loc[ImportStudentsAction]}" />
+              </Grid>
+            </StackPanel>
+          </Border>
+
+          <TextBox Text="{Binding SearchQuery}"
+                   Watermark="{Binding Loc[SearchStudentWatermark]}" />
+        </StackPanel>
+
+        <Grid>
+          <TextBlock Text="{Binding Loc[NoStudentsFoundText]}"
+                     IsVisible="{Binding HasNoStudents}"
+                     FontSize="12"
+                     Foreground="{DynamicResource TextMutedBrush}"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     TextWrapping="Wrap" />
+
+          <ListBox ItemsSource="{Binding FilteredStudents}"
+                   SelectedItem="{Binding SelectedStudentItem}"
+                   Background="Transparent">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:StudentListItemViewModel">
+                <Grid ColumnDefinitions="Auto,10,*,10,Auto" Margin="0,4">
+                  <controls:AvatarControl Grid.Column="0"
+                                          FullName="{Binding FullName}"
+                                          PhotoPath="{Binding PhotoPath}"
+                                          Size="34" />
+                  <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding FullName}"
+                               FontSize="13"
+                               FontWeight="Medium"
+                               TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="{Binding RollDisplay}"
+                               FontSize="11"
+                               Foreground="{DynamicResource TextMutedBrush}" />
+                  </StackPanel>
+                  <Border Grid.Column="4"
+                          IsVisible="{Binding HasSpecialNeeds}"
+                          VerticalAlignment="Center"
+                          Background="{DynamicResource WarningBgBrush}"
+                          CornerRadius="4"
+                          Padding="5,2">
+                    <TextBlock Text="PDI" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource WarningTextBrush}" />
+                  </Border>
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </Grid>
+      </DockPanel>
+    </Border>
+
+    <!-- Right Detail Pane: Consolidated Student Dossier -->
+    <ScrollViewer Grid.Column="2"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto"
+                  Padding="0,0,14,0"
+                  IsVisible="{Binding HasSelectedStudent}">
+      <StackPanel Spacing="18">
+        <!-- Title Row -->
+        <Grid ColumnDefinitions="*,16,Auto">
+          <StackPanel Grid.Column="0" Spacing="4">
+            <TextBlock Text="{Binding Loc[DossierTitle]}"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       TextWrapping="Wrap"
+                       Foreground="{DynamicResource TextPrimaryBrush}" />
+            <TextBlock Text="{Binding Loc[DossierSubtitle]}"
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       Foreground="{DynamicResource TextMutedBrush}" />
+          </StackPanel>
+
+          <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+            <Button Classes="secondary"
+                    Click="OnExportCouncilPdfClick">
+              <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                <PathIcon Data="{StaticResource IconPdf}" Width="14" Height="14" />
+                <TextBlock Text="{Binding Loc[ExportCouncilPdfButton]}" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+
+            <Button Classes="secondary"
+                    Click="OnExportBatchDossiersClick">
+              <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                <PathIcon Data="{StaticResource IconPdf}" Width="14" Height="14" />
+                <TextBlock Text="{Binding Loc[ExportBatchDossiersButton]}" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+
+            <Button Classes="secondary"
+                    Click="OnChangePhotoClick">
+              <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                <PathIcon Data="{StaticResource IconUpload}" Width="14" Height="14" />
+                <TextBlock Text="{Binding Loc[ChangePhotoButton]}" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+
+            <Button Classes="secondary"
+                    IsVisible="{Binding HasStudentPhoto}"
+                    Command="{Binding RemovePhotoCommand}"
+                    Content="{Binding Loc[RemovePhotoButton]}" />
+
+            <Button Classes="primary"
+                    Click="OnExportPdfClick">
+              <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                <PathIcon Data="{StaticResource IconPdf}" Width="14" Height="14" Foreground="White" />
+                <TextBlock Text="{Binding Loc[ExportPdfButton]}" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+          </StackPanel>
+        </Grid>
+
+        <TextBlock Text="{Binding StatusMessage}"
+                   FontSize="12"
+                   FontWeight="SemiBold"
+                   Foreground="{DynamicResource SuccessTextBrush}"
+                   IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+        <!-- Student Profile & PDI Card -->
+        <Border Classes="card">
+          <StackPanel Spacing="14">
+            <Grid ColumnDefinitions="Auto,16,*,16,Auto">
+              <controls:AvatarControl Grid.Column="0"
+                                      VerticalAlignment="Center"
+                                      FullName="{Binding StudentFullName}"
+                                      PhotoPath="{Binding StudentPhotoPath}"
+                                      Size="72" />
+
+              <Grid Grid.Column="2" ColumnDefinitions="136,12,*" VerticalAlignment="Center">
+                <StackPanel Grid.Column="0" Spacing="4">
+                  <TextBlock Text="{Binding Loc[RollNumberLabel]}"
+                             FontSize="11"
+                             FontWeight="SemiBold"
+                             Foreground="{DynamicResource TextMutedBrush}" />
+                  <NumericUpDown Value="{Binding StudentRollNumberValue}"
+                                 Minimum="1"
+                                 Maximum="999"
+                                 Increment="1"
+                                 FormatString="0" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Spacing="4">
+                  <TextBlock Text="{Binding Loc[StudentFullNameLabel]}"
+                             FontSize="11"
+                             FontWeight="SemiBold"
+                             Foreground="{DynamicResource TextMutedBrush}" />
+                  <TextBox Text="{Binding StudentFullName}"
+                           FontSize="15"
+                           FontWeight="SemiBold" />
+                </StackPanel>
+              </Grid>
+
+              <StackPanel Grid.Column="4"
+                          Orientation="Horizontal"
+                          Spacing="8"
+                          VerticalAlignment="Bottom">
+                <Border IsVisible="{Binding HasSpecialNeeds}"
+                        Background="{DynamicResource WarningBgBrush}"
+                        CornerRadius="6"
+                        Padding="10,7"
+                        VerticalAlignment="Center">
+                  <TextBlock Text="PDI / AEE"
+                             FontWeight="Bold"
+                             FontSize="11"
+                             Foreground="{DynamicResource WarningTextBrush}" />
+                </Border>
+                <Button Classes="primary"
+                        Command="{Binding SaveProfileCommand}"
+                        Content="{Binding Loc[SaveProfileButton]}" />
+              </StackPanel>
+            </Grid>
+
+            <Grid ColumnDefinitions="*,12,Auto">
+              <CheckBox Grid.Column="0"
+                        VerticalAlignment="Center"
+                        IsChecked="{Binding HasSpecialNeeds}"
+                        Content="{Binding Loc[SpecialNeedsPdiLabel]}" />
+
+              <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                <Button Classes="secondary"
+                        IsVisible="{Binding ConfirmingDeleteStudent}"
+                        Command="{Binding CancelDeleteStudentCommand}"
+                        Content="{Binding Loc[CancelButton]}" />
+                <Button Classes="danger"
+                        Command="{Binding RequestDeleteStudentCommand}"
+                        Content="{Binding DeleteStudentButtonText}" />
+              </StackPanel>
+            </Grid>
+
+            <StackPanel Spacing="6">
+              <TextBlock Text="{Binding Loc[GeneralNotesLabel]}"
+                         FontSize="12"
+                         FontWeight="SemiBold"
+                         Foreground="{DynamicResource TextMutedBrush}" />
+              <TextBox Text="{Binding GeneralNotes}"
+                       AcceptsReturn="True"
+                       MinHeight="72"
+                       TextWrapping="Wrap" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <!-- LDB 75% Attendance Summary Card (3x2 Grid + Visual ProgressBar) -->
+        <Border Classes="card">
+          <StackPanel Spacing="14">
+            <Grid ColumnDefinitions="*,12,Auto">
+              <TextBlock Grid.Column="0"
+                         Text="{Binding Loc[AttendanceSummaryTitle]}"
+                         FontSize="15"
+                         FontWeight="Bold"
+                         VerticalAlignment="Center"
+                         Foreground="{DynamicResource TextPrimaryBrush}" />
+              <Border Grid.Column="2"
+                      CornerRadius="6"
+                      Padding="10,4"
+                      Background="{Binding AlertStatus, Converter={x:Static conv:AlertStatusToBrushConverter.Instance}, ConverterParameter=bg}">
+                <TextBlock Text="{Binding AlertLabel}"
+                           FontSize="12"
+                           FontWeight="Bold"
+                           Foreground="{Binding AlertStatus, Converter={x:Static conv:AlertStatusToBrushConverter.Instance}}" />
+              </Border>
+            </Grid>
+
+            <!-- Period / Semester Attendance Filter Pills -->
+            <ItemsControl ItemsSource="{Binding AttendancePeriodPills}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:TermPillViewModel">
+                  <Button Classes="pill"
+                          Classes.active="{Binding IsSelected}"
+                          Margin="0,0,6,4"
+                          Command="{Binding SelectCommand}"
+                          Content="{Binding Label}" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <ProgressBar Minimum="0"
+                         Maximum="100"
+                         Value="{Binding AttendanceRateValue}"
+                         Foreground="{Binding AlertStatus, Converter={x:Static conv:AlertStatusToBrushConverter.Instance}}"
+                         Background="{DynamicResource SubtleSurfaceBrush}" />
+
+            <Grid ColumnDefinitions="*,12,*,12,*" RowDefinitions="Auto,12,Auto">
+              <Border Grid.Row="0" Grid.Column="0" Background="{DynamicResource SubtleSurfaceBrush}" CornerRadius="8" Padding="12,10">
+                <StackPanel HorizontalAlignment="Center" Spacing="2">
+                  <TextBlock Text="{Binding TotalLessons}" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" />
+                  <TextBlock Text="{Binding Loc[TotalLessonsLabel]}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap" HorizontalAlignment="Center" />
+                </StackPanel>
+              </Border>
+
+              <Border Grid.Row="0" Grid.Column="2" Background="{DynamicResource SubtleSurfaceBrush}" CornerRadius="8" Padding="12,10">
+                <StackPanel HorizontalAlignment="Center" Spacing="2">
+                  <TextBlock Text="{Binding PresentLessons}" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" />
+                  <TextBlock Text="{Binding Loc[PresentLessonsLabel]}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap" HorizontalAlignment="Center" />
+                </StackPanel>
+              </Border>
+
+              <Border Grid.Row="0" Grid.Column="4" Background="{DynamicResource SubtleSurfaceBrush}" CornerRadius="8" Padding="12,10">
+                <StackPanel HorizontalAlignment="Center" Spacing="2">
+                  <TextBlock Text="{Binding UnexcusedAbsences}" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" />
+                  <TextBlock Text="{Binding Loc[UnexcusedAbsencesLabel]}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap" HorizontalAlignment="Center" />
+                </StackPanel>
+              </Border>
+
+              <Border Grid.Row="2" Grid.Column="0" Background="{DynamicResource SubtleSurfaceBrush}" CornerRadius="8" Padding="12,10">
+                <StackPanel HorizontalAlignment="Center" Spacing="2">
+                  <TextBlock Text="{Binding JustifiedAbsences}" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" />
+                  <TextBlock Text="{Binding Loc[JustifiedAbsencesLabel]}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap" HorizontalAlignment="Center" />
+                </StackPanel>
+              </Border>
+
+              <Border Grid.Row="2" Grid.Column="2" Background="{DynamicResource SuccessBgBrush}" CornerRadius="8" Padding="12,10">
+                <StackPanel HorizontalAlignment="Center" Spacing="2">
+                  <TextBlock Text="{Binding AttendancePercentageText}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource SuccessTextBrush}" HorizontalAlignment="Center" />
+                  <TextBlock Text="{Binding Loc[AttendanceRateLabel]}" FontSize="11" Foreground="{DynamicResource SuccessTextBrush}" TextWrapping="Wrap" HorizontalAlignment="Center" />
+                </StackPanel>
+              </Border>
+
+              <Border Grid.Row="2" Grid.Column="4"
+                      Background="{Binding AlertStatus, Converter={x:Static conv:AlertStatusToBrushConverter.Instance}, ConverterParameter=bg}"
+                      CornerRadius="8"
+                      Padding="12,10">
+                <StackPanel HorizontalAlignment="Center" Spacing="2">
+                  <TextBlock Text="{Binding AbsencePercentageText}"
+                             FontSize="18"
+                             FontWeight="Bold"
+                             Foreground="{Binding AlertStatus, Converter={x:Static conv:AlertStatusToBrushConverter.Instance}}"
+                             HorizontalAlignment="Center" />
+                  <TextBlock Text="{Binding Loc[AbsencePercentageLabel]}"
+                             FontSize="11"
+                             Foreground="{Binding AlertStatus, Converter={x:Static conv:AlertStatusToBrushConverter.Instance}}"
+                             TextWrapping="Wrap"
+                             HorizontalAlignment="Center" />
+                </StackPanel>
+              </Border>
+            </Grid>
+          </StackPanel>
+        </Border>
+
+        <!-- Consolidated Subject Grades Card (With Progress Bars) -->
+        <Border Classes="card">
+          <StackPanel Spacing="10">
+            <TextBlock Text="{Binding Loc[GradesSummaryTitle]}"
+                       FontSize="15"
+                       FontWeight="Bold"
+                       Foreground="{DynamicResource TextPrimaryBrush}" />
+
+            <ItemsControl ItemsSource="{Binding SubjectGrades}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:SubjectDossierGradeViewModel">
+                  <Border BorderBrush="{DynamicResource CardBorderBrush}"
+                          BorderThickness="0,0,0,1"
+                          Padding="4,10">
+                    <StackPanel Spacing="6">
+                      <Grid ColumnDefinitions="160,12,*,12,84,12,120">
+                        <TextBlock Grid.Column="0"
+                                   Text="{Binding SubjectName}"
+                                   FontWeight="SemiBold"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="2"
+                                   Text="{Binding TermsSummary}"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource TextMutedBrush}"
+                                   VerticalAlignment="Center" />
+                        <Border Grid.Column="4"
+                                CornerRadius="6"
+                                Padding="8,4"
+                                HorizontalAlignment="Center"
+                                Background="{Binding BelowPassingState, Converter={x:Static conv:BelowPassingToBrushConverter.Instance}, ConverterParameter=bg}">
+                          <TextBlock Text="{Binding FinalScoreText}"
+                                     FontWeight="Bold"
+                                     Foreground="{Binding BelowPassingState, Converter={x:Static conv:BelowPassingToBrushConverter.Instance}}" />
+                        </Border>
+                        <TextBlock Grid.Column="6"
+                                   Text="{Binding StatusText}"
+                                   FontSize="12"
+                                   FontWeight="SemiBold"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Right"
+                                   Foreground="{Binding BelowPassingState, Converter={x:Static conv:BelowPassingToBrushConverter.Instance}}" />
+                      </Grid>
+
+                      <ProgressBar Minimum="0"
+                                   Maximum="100"
+                                   Value="{Binding ScoreProgressPercentage}"
+                                   Foreground="{Binding ProgressBrush}"
+                                   Background="{DynamicResource SubtleSurfaceBrush}" />
+                    </StackPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </Border>
+
+        <!-- Pedagogical Observations Timeline Card -->
+        <Border Classes="card">
+          <StackPanel Spacing="14">
+            <StackPanel Spacing="10">
+              <TextBlock Text="{Binding Loc[ObservationsTimelineTitle]}"
+                         FontSize="15"
+                         FontWeight="Bold"
+                         Foreground="{DynamicResource TextPrimaryBrush}" />
+
+              <!-- Observation Category Filter Pills (Wrapping) -->
+              <ItemsControl ItemsSource="{Binding ObservationFilterPills}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:ObservationFilterPillViewModel">
+                    <Button Classes="pill"
+                            Classes.active="{Binding IsSelected}"
+                            Margin="0,0,8,6"
+                            Command="{Binding SelectCommand}"
+                            Content="{Binding Label}" />
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+
+            <!-- New Observation Form -->
+            <Border Background="{DynamicResource SubtleSurfaceBrush}" CornerRadius="10" Padding="14">
+              <StackPanel Spacing="12">
+                <Grid ColumnDefinitions="*,14,Auto">
+                  <StackPanel Grid.Column="0" Spacing="4">
+                    <TextBlock Text="{Binding Loc[ObservationCategoryLabel]}"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextMutedBrush}" />
+                    <ComboBox ItemsSource="{Binding CategoryOptions}"
+                              SelectedItem="{Binding SelectedCategoryOption}"
+                              HorizontalAlignment="Stretch">
+                      <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="vm:LocalizedChoice">
+                          <TextBlock Text="{Binding Label}" />
+                        </DataTemplate>
+                      </ComboBox.ItemTemplate>
+                    </ComboBox>
+                  </StackPanel>
+
+                  <StackPanel Grid.Column="2" Spacing="4">
+                    <TextBlock Text="{Binding Loc[DateLabel]}"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextMutedBrush}" />
+                    <DatePicker SelectedDate="{Binding NewObservationDate}" />
+                  </StackPanel>
+                </Grid>
+
+                <TextBox Text="{Binding NewObservationContent}"
+                         Watermark="{Binding Loc[ObservationContentWatermark]}"
+                         AcceptsReturn="True"
+                         MinHeight="64"
+                         TextWrapping="Wrap" />
+
+                <Button Classes="primary"
+                        HorizontalAlignment="Right"
+                        Command="{Binding AddObservationCommand}"
+                        Content="{Binding Loc[AddObservationButton]}" />
+              </StackPanel>
+            </Border>
+
+            <TextBlock Text="{Binding Loc[NoObservationsText]}"
+                       IsVisible="{Binding HasNoObservations}"
+                       FontSize="12"
+                       Foreground="{DynamicResource TextMutedBrush}" />
+
+            <!-- Chronological Timeline -->
+            <ItemsControl ItemsSource="{Binding Observations}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:ObservationItemViewModel">
+                  <Border BorderBrush="{Binding Category, Converter={x:Static conv:ObservationCategoryToBrushConverter.Instance}}"
+                          BorderThickness="4,0,0,0"
+                          Background="{DynamicResource SubtleSurfaceBrush}"
+                          CornerRadius="0,8,8,0"
+                          Padding="12,10"
+                          Margin="0,0,0,8">
+                    <Grid ColumnDefinitions="*,12,Auto">
+                      <StackPanel Grid.Column="0" Spacing="4">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                          <Border Background="{Binding Category, Converter={x:Static conv:ObservationCategoryToBrushConverter.Instance}}"
+                                  CornerRadius="4"
+                                  Padding="7,2">
+                            <TextBlock Text="{Binding CategoryLabel}"
+                                       FontSize="10"
+                                       FontWeight="Bold"
+                                       Foreground="White" />
+                          </Border>
+                          <TextBlock Text="{Binding DateDisplay}"
+                                     FontSize="12"
+                                     FontWeight="SemiBold"
+                                     Foreground="{DynamicResource TextMutedBrush}"
+                                     VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <TextBlock Text="{Binding Content}"
+                                   TextWrapping="Wrap"
+                                   FontSize="13"
+                                   Foreground="{DynamicResource TextPrimaryBrush}" />
+                      </StackPanel>
+
+                      <Button Grid.Column="2"
+                              Classes="secondary"
+                              VerticalAlignment="Top"
+                              Command="{Binding DeleteCommand}"
+                              Content="{Binding Loc[DeleteButton]}" />
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </Border>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

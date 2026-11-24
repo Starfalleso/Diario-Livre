@@ -1,0 +1,324 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DiarioLivre.Desktop.ViewModels"
+        xmlns:svc="using:DiarioLivre.Desktop.Services"
+        x:Class="DiarioLivre.Desktop.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Diário Livre"
+        Icon="avares://DiarioLivre.Desktop/Assets/diariolivre.ico"
+        Width="1320"
+        Height="850"
+        MinWidth="1060"
+        MinHeight="680"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource AppBackgroundBrush}">
+
+  <Window.KeyBindings>
+    <KeyBinding Gesture="Ctrl+D1" Command="{Binding NavigateDashboardCommand}" />
+    <KeyBinding Gesture="Ctrl+D2" Command="{Binding NavigateGradebookCommand}" />
+    <KeyBinding Gesture="Ctrl+D3" Command="{Binding NavigateAttendanceCommand}" />
+    <KeyBinding Gesture="Ctrl+D4" Command="{Binding NavigateDossierCommand}" />
+    <KeyBinding Gesture="Ctrl+D5" Command="{Binding NavigatePlannerCommand}" />
+    <KeyBinding Gesture="Ctrl+D6" Command="{Binding NavigateCalendarCommand}" />
+    <KeyBinding Gesture="Ctrl+D7" Command="{Binding NavigateSettingsCommand}" />
+    <KeyBinding Gesture="Ctrl+NumPad1" Command="{Binding NavigateDashboardCommand}" />
+    <KeyBinding Gesture="Ctrl+NumPad2" Command="{Binding NavigateGradebookCommand}" />
+    <KeyBinding Gesture="Ctrl+NumPad3" Command="{Binding NavigateAttendanceCommand}" />
+    <KeyBinding Gesture="Ctrl+NumPad4" Command="{Binding NavigateDossierCommand}" />
+    <KeyBinding Gesture="Ctrl+NumPad5" Command="{Binding NavigatePlannerCommand}" />
+    <KeyBinding Gesture="Ctrl+NumPad6" Command="{Binding NavigateCalendarCommand}" />
+    <KeyBinding Gesture="Ctrl+NumPad7" Command="{Binding NavigateSettingsCommand}" />
+    <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveCurrentViewCommand}" />
+  </Window.KeyBindings>
+
+  <Grid>
+    <Grid ColumnDefinitions="240,*">
+    <!-- Navigation Sidebar -->
+    <Border Grid.Column="0"
+            Background="{DynamicResource SidebarBackgroundBrush}"
+            BorderBrush="{DynamicResource CardBorderBrush}"
+            BorderThickness="0,0,1,0"
+            Padding="16,20">
+      <DockPanel LastChildFill="True">
+        <!-- App Brand -->
+        <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="4,0,4,20">
+          <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+            <Image Source="avares://DiarioLivre.Desktop/Assets/diariolivre.png"
+                   Width="38"
+                   Height="38" />
+            <StackPanel VerticalAlignment="Center">
+              <TextBlock Text="{Binding Loc[AppTitle]}"
+                         FontSize="17"
+                         FontWeight="Bold"
+                         Foreground="{DynamicResource TextPrimaryBrush}" />
+              <TextBlock Text="{Binding Loc[AppSubtitle]}"
+                         FontSize="11"
+                         Foreground="{DynamicResource TextMutedBrush}" />
+            </StackPanel>
+          </StackPanel>
+
+          <Border Margin="0,12,0,0"
+                  Padding="10,8"
+                  CornerRadius="8"
+                  Background="{DynamicResource SubtleSurfaceBrush}">
+            <StackPanel Spacing="2">
+              <TextBlock Text="{Binding Loc[ActiveClassroomLabel]}"
+                         FontSize="10"
+                         FontWeight="SemiBold"
+                         Foreground="{DynamicResource TextMutedBrush}" />
+              <TextBlock Text="{Binding AppState.ActiveClassroomName}"
+                         FontSize="13"
+                         FontWeight="SemiBold"
+                         Foreground="{DynamicResource TextPrimaryBrush}"
+                         TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <!-- Bottom Controls: Lock, Theme & Bilingual Language Switch -->
+        <StackPanel DockPanel.Dock="Bottom" Spacing="10" Margin="0,16,0,0">
+          <Border Height="1" Background="{DynamicResource CardBorderBrush}" Margin="0,4" />
+
+          <Button Classes="secondary"
+                  HorizontalAlignment="Stretch"
+                  IsVisible="{Binding HasPinConfigured}"
+                  Command="{Binding LockNowCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+              <PathIcon Data="{StaticResource IconLock}" Width="14" Height="14" />
+              <TextBlock Text="{Binding Loc[LockNowButton]}" FontSize="12" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <Button Classes="secondary"
+                  HorizontalAlignment="Stretch"
+                  Command="{Binding ToggleThemeCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+              <PathIcon Data="{StaticResource IconMoon}"
+                        Width="14"
+                        Height="14"
+                        IsVisible="{Binding !Theme.IsDarkTheme}" />
+              <PathIcon Data="{StaticResource IconSun}"
+                        Width="14"
+                        Height="14"
+                        IsVisible="{Binding Theme.IsDarkTheme}" />
+              <TextBlock Text="{Binding ThemeButtonText}" FontSize="12" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <StackPanel Spacing="4">
+            <TextBlock Text="{Binding Loc[LanguageLabel]}"
+                       FontSize="11"
+                       Foreground="{DynamicResource TextMutedBrush}"
+                       Margin="4,0" />
+            <Grid ColumnDefinitions="*,6,*">
+              <Button Grid.Column="0"
+                      Classes="pill"
+                      Classes.active="{Binding Loc.IsPortuguese}"
+                      HorizontalAlignment="Stretch"
+                      HorizontalContentAlignment="Center"
+                      Command="{Binding SetPortugueseCommand}"
+                      Content="PT-BR" />
+              <Button Grid.Column="2"
+                      Classes="pill"
+                      Classes.active="{Binding Loc.IsEnglish}"
+                      HorizontalAlignment="Stretch"
+                      HorizontalContentAlignment="Center"
+                      Command="{Binding SetEnglishCommand}"
+                      Content="EN-US" />
+            </Grid>
+          </StackPanel>
+
+          <StackPanel Spacing="2" Margin="0,4,0,0">
+            <TextBlock Text="{Binding Loc[OfflineBadge]}"
+                       FontSize="10"
+                       Foreground="{DynamicResource TextMutedBrush}"
+                       HorizontalAlignment="Center" />
+            <TextBlock Text="{Binding Loc[ShortcutsHint]}"
+                       FontSize="10"
+                       Foreground="{DynamicResource TextMutedBrush}"
+                       HorizontalAlignment="Center" />
+          </StackPanel>
+        </StackPanel>
+
+        <!-- Main Navigation Links -->
+        <StackPanel Spacing="6">
+          <Button Classes="nav"
+                  Classes.active="{Binding IsDashboardActive}"
+                  Command="{Binding NavigateDashboardCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+              <PathIcon Data="{StaticResource IconDashboard}" Width="16" Height="16" />
+              <TextBlock Text="{Binding Loc[NavDashboard]}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <Button Classes="nav"
+                  Classes.active="{Binding IsGradebookActive}"
+                  Command="{Binding NavigateGradebookCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+              <PathIcon Data="{StaticResource IconGradebook}" Width="16" Height="16" />
+              <TextBlock Text="{Binding Loc[NavGradebook]}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <Button Classes="nav"
+                  Classes.active="{Binding IsAttendanceActive}"
+                  Command="{Binding NavigateAttendanceCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+              <PathIcon Data="{StaticResource IconAttendance}" Width="16" Height="16" />
+              <TextBlock Text="{Binding Loc[NavAttendance]}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <Button Classes="nav"
+                  Classes.active="{Binding IsDossierActive}"
+                  Command="{Binding NavigateDossierCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+              <PathIcon Data="{StaticResource IconDossier}" Width="16" Height="16" />
+              <TextBlock Text="{Binding Loc[NavDossier]}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <Button Classes="nav"
+                  Classes.active="{Binding IsPlannerActive}"
+                  Command="{Binding NavigatePlannerCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+              <PathIcon Data="{StaticResource IconPlanner}" Width="16" Height="16" />
+              <TextBlock Text="{Binding Loc[NavPlanner]}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <Button Classes="nav"
+                  Classes.active="{Binding IsCalendarActive}"
+                  Command="{Binding NavigateCalendarCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+              <PathIcon Data="{StaticResource IconCalendar}" Width="16" Height="16" />
+              <TextBlock Text="{Binding Loc[NavCalendar]}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <Button Classes="nav"
+                  Classes.active="{Binding IsSettingsActive}"
+                  Command="{Binding NavigateSettingsCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+              <PathIcon Data="{StaticResource IconSettings}" Width="16" Height="16" />
+              <TextBlock Text="{Binding Loc[NavSettings]}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+        </StackPanel>
+      </DockPanel>
+    </Border>
+
+    <!-- Main Workspace Content + Floating Toast Overlay -->
+    <Grid Grid.Column="1">
+      <ContentControl Content="{Binding CurrentViewModel}"
+                      Padding="26,22" />
+
+      <ItemsControl ItemsSource="{Binding Toast.Toasts}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Margin="0,0,24,20"
+                    ZIndex="100"
+                    IsHitTestVisible="True">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="svc:ToastNotification">
+            <Border Background="{DynamicResource CardBackgroundBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="14,10"
+                    Margin="0,8,0,0"
+                    MinWidth="280"
+                    MaxWidth="400"
+                    BoxShadow="0 8 24 0 #48000000">
+              <Grid ColumnDefinitions="4,12,*,8,Auto">
+                <Border Grid.Column="0"
+                        Background="{Binding AccentBrush}"
+                        CornerRadius="2" />
+                <TextBlock Grid.Column="2"
+                           Text="{Binding Message}"
+                           FontSize="13"
+                           FontWeight="Medium"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource TextPrimaryBrush}" />
+                <Button Grid.Column="4"
+                        Command="{Binding DismissCommand}"
+                        Background="Transparent"
+                        Padding="6,2"
+                        FontSize="12"
+                        FontWeight="Bold"
+                        Foreground="{DynamicResource TextMutedBrush}"
+                        Content="×" />
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </Grid>
+  </Grid>
+
+    <!-- Local LGPD PIN Lock Screen Overlay -->
+    <Border IsVisible="{Binding IsLocked}"
+            ZIndex="200"
+            Background="{DynamicResource AppBackgroundBrush}">
+      <Border Classes="card"
+              Width="380"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              Padding="28"
+              BoxShadow="0 16 40 0 #48000000">
+        <StackPanel Spacing="16">
+          <Border Width="52"
+                  Height="52"
+                  CornerRadius="14"
+                  Background="{DynamicResource AccentSoftBrush}"
+                  HorizontalAlignment="Center">
+            <PathIcon Data="{StaticResource IconLock}"
+                      Width="24"
+                      Height="24"
+                      Foreground="{DynamicResource AccentTextBrush}"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center" />
+          </Border>
+
+          <StackPanel Spacing="4" HorizontalAlignment="Center">
+            <TextBlock Text="{Binding Loc[LockScreenTitle]}"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource TextPrimaryBrush}" />
+            <TextBlock Text="{Binding Loc[LockScreenSubtitle]}"
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center"
+                       Foreground="{DynamicResource TextMutedBrush}" />
+          </StackPanel>
+
+          <TextBox Text="{Binding PinInput}"
+                   PasswordChar="•"
+                   Watermark="{Binding Loc[UnlockPinWatermark]}"
+                   HorizontalContentAlignment="Center"
+                   FontSize="18"
+                   FontWeight="Bold">
+            <TextBox.KeyBindings>
+              <KeyBinding Gesture="Enter" Command="{Binding UnlockCommand}" />
+            </TextBox.KeyBindings>
+          </TextBox>
+
+          <TextBlock Text="{Binding PinErrorText}"
+                     IsVisible="{Binding PinErrorText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                     FontSize="12"
+                     FontWeight="SemiBold"
+                     HorizontalAlignment="Center"
+                     Foreground="{DynamicResource DangerTextBrush}" />
+
+          <Button Classes="primary"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Center"
+                  Command="{Binding UnlockCommand}"
+                  Content="{Binding Loc[UnlockButton]}" />
+        </StackPanel>
+      </Border>
+    </Border>
+  </Grid>
+</Window>

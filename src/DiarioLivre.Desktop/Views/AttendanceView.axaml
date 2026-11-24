@@ -1,0 +1,536 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DiarioLivre.Desktop.ViewModels"
+             xmlns:entities="using:DiarioLivre.Core.Entities"
+             xmlns:controls="using:DiarioLivre.Desktop.Controls"
+             xmlns:conv="using:DiarioLivre.Desktop.Converters"
+             x:Class="DiarioLivre.Desktop.Views.AttendanceView"
+             x:DataType="vm:AttendanceViewModel">
+
+  <DockPanel LastChildFill="True">
+    <!-- Top Header & Session Metadata -->
+    <StackPanel DockPanel.Dock="Top" Spacing="12" Margin="0,0,0,12">
+      <Grid ColumnDefinitions="*,16,Auto">
+        <StackPanel Grid.Column="0" Spacing="4">
+          <TextBlock Text="{Binding Loc[AttendanceTitle]}"
+                     FontSize="24"
+                     FontWeight="Bold"
+                     TextWrapping="Wrap"
+                     Foreground="{DynamicResource TextPrimaryBrush}" />
+          <TextBlock Text="{Binding Loc[AttendanceSubtitle]}"
+                     FontSize="13"
+                     TextWrapping="Wrap"
+                     Foreground="{DynamicResource TextMutedBrush}" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+          <Button Classes="secondary"
+                  Command="{Binding ToggleLessonLogCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+              <PathIcon Data="{StaticResource IconHistory}" Width="14" Height="14" />
+              <TextBlock Text="{Binding Loc[LessonLogToggleButton]}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <Button Classes="secondary"
+                  IsEnabled="{Binding CanExport}"
+                  Click="OnExportPdfClick">
+            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+              <PathIcon Data="{StaticResource IconPdf}" Width="14" Height="14" />
+              <TextBlock Text="{Binding Loc[ExportAttendancePdfButton]}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <Button Classes="secondary"
+                  Command="{Binding InvertAttendanceCommand}"
+                  Content="{Binding Loc[InvertButton]}" />
+
+          <Button Classes="secondary"
+                  Command="{Binding MarkAllPresentCommand}"
+                  Content="{Binding Loc[MarkAllPresentButton]}" />
+
+          <Button Classes="primary"
+                  Command="{Binding SaveAttendanceCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+              <PathIcon Data="{StaticResource IconSave}" Width="14" Height="14" Foreground="White" />
+              <TextBlock Text="{Binding Loc[SaveAttendanceButton]}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+        </StackPanel>
+      </Grid>
+
+      <!-- Collapsible Lesson History Log Drawer -->
+      <Border Classes="card" IsVisible="{Binding IsLessonLogVisible}" Padding="16">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding Loc[LessonLogToggleButton]}"
+                     FontSize="14"
+                     FontWeight="Bold"
+                     Foreground="{DynamicResource TextPrimaryBrush}" />
+
+          <TextBlock Text="{Binding Loc[LessonLogEmptyText]}"
+                     IsVisible="{Binding HasNoLessonLog}"
+                     FontSize="12"
+                     Foreground="{DynamicResource TextMutedBrush}" />
+
+          <ScrollViewer MaxHeight="200"
+                        HorizontalScrollBarVisibility="Disabled"
+                        VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding LessonLogItems}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:LessonLogItemViewModel">
+                  <Border BorderBrush="{DynamicResource CardBorderBrush}"
+                          BorderThickness="0,0,0,1"
+                          Padding="6,8">
+                    <Grid ColumnDefinitions="90,8,64,8,44,10,*,10,Auto,10,Auto,6,Auto">
+                      <TextBlock Grid.Column="0" Text="{Binding DateDisplay}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                      <Border Grid.Column="2" Background="{DynamicResource SubtleSurfaceBrush}" CornerRadius="6" Padding="6,2" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding TermBadge}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center" />
+                      </Border>
+                      <Border Grid.Column="4" Background="{DynamicResource AccentSoftBrush}" CornerRadius="6" Padding="6,2" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding LessonCountDisplay}" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" />
+                      </Border>
+                      <StackPanel Grid.Column="6" Spacing="2" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding TopicCovered}" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
+                        <TextBlock IsVisible="{Binding HasDailyActivity}"
+                                   FontSize="11"
+                                   TextTrimming="CharacterEllipsis"
+                                   Foreground="{DynamicResource TextMutedBrush}">
+                          <Run Text="{Binding Loc[DailyActivityLabel]}" FontWeight="SemiBold" />
+                          <Run Text=": " />
+                          <Run Text="{Binding DailyActivity}" />
+                        </TextBlock>
+                        <TextBlock IsVisible="{Binding HasHomework}"
+                                   FontSize="11"
+                                   TextTrimming="CharacterEllipsis"
+                                   Foreground="{DynamicResource TextMutedBrush}">
+                          <Run Text="{Binding Loc[HomeworkLabel]}" FontWeight="SemiBold" />
+                          <Run Text=": " />
+                          <Run Text="{Binding Homework}" />
+                        </TextBlock>
+                      </StackPanel>
+                      <TextBlock Grid.Column="8" Text="{Binding CountsDisplay}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center" />
+                      <Button Grid.Column="10"
+                              Classes="secondary"
+                              Padding="10,4"
+                              MinHeight="28"
+                              FontSize="11"
+                              Command="{Binding OpenCommand}"
+                              Content="{Binding Loc[DateLabel]}" />
+                      <Button Grid.Column="12"
+                              Classes="danger"
+                              Padding="10,4"
+                              MinHeight="28"
+                              FontSize="11"
+                              Command="{Binding DeleteCommand}"
+                              Content="{Binding Loc[DeleteButton]}" />
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </StackPanel>
+      </Border>
+
+      <!-- Session Filters & Topic / Daily Activity Card -->
+      <Border Classes="card" Padding="14,12">
+        <StackPanel Spacing="12">
+          <!-- Period / Semester Pill Strip -->
+          <Grid ColumnDefinitions="Auto,10,*,12,Auto" VerticalAlignment="Center">
+            <TextBlock Grid.Column="0"
+                       Text="{Binding Loc[ActivePeriodLabel]}"
+                       FontSize="11"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextMutedBrush}"
+                       VerticalAlignment="Center" />
+            <ItemsControl Grid.Column="2" ItemsSource="{Binding TermFilterPills}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:TermPillViewModel">
+                  <Button Classes="pill"
+                          Classes.active="{Binding IsSelected}"
+                          Margin="0,0,6,0"
+                          Command="{Binding SelectCommand}"
+                          Content="{Binding Label}" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <StackPanel Grid.Column="4" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+              <Border Background="{DynamicResource SubtleSurfaceBrush}"
+                      CornerRadius="8"
+                      Padding="10,4"
+                      VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <TextBlock Text="{Binding Loc[PeriodLessonsLabel]}"
+                             FontSize="11"
+                             Foreground="{DynamicResource TextMutedBrush}" />
+                  <TextBlock Text="{Binding PeriodLessonsCount}"
+                             FontSize="12"
+                             FontWeight="Bold"
+                             Foreground="{DynamicResource AccentBrush}" />
+                </StackPanel>
+              </Border>
+
+              <Border Background="{DynamicResource SuccessBgBrush}"
+                      CornerRadius="8"
+                      Padding="10,4"
+                      VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <TextBlock Text="{Binding Loc[SchoolDaysLabel]}"
+                             FontSize="11"
+                             Foreground="{DynamicResource SuccessTextBrush}" />
+                  <TextBlock Text="{Binding SchoolDaysCountText}"
+                             FontSize="12"
+                             FontWeight="Bold"
+                             Foreground="{DynamicResource SuccessTextBrush}" />
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </Grid>
+
+          <!-- Row 1: Classroom + Subject -->
+          <Grid ColumnDefinitions="*,14,*">
+            <StackPanel Grid.Column="0" Spacing="4">
+              <TextBlock Text="{Binding Loc[ClassroomLabel]}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}" />
+              <ComboBox ItemsSource="{Binding Classrooms}"
+                        SelectedItem="{Binding SelectedClassroom}"
+                        HorizontalAlignment="Stretch">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate x:DataType="entities:Classroom">
+                    <TextBlock Text="{Binding Name}" />
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Spacing="4" IsVisible="{Binding IsSubjectSelectionVisible}">
+              <TextBlock Text="{Binding Loc[SubjectLabel]}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}" />
+              <ComboBox ItemsSource="{Binding Subjects}"
+                        SelectedItem="{Binding SelectedSubject}"
+                        HorizontalAlignment="Stretch">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate x:DataType="entities:Subject">
+                    <TextBlock Text="{Binding Name}" />
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </StackPanel>
+
+            <Border Grid.Column="2"
+                    IsVisible="{Binding IsMultiSubjectClassroom}"
+                    VerticalAlignment="Bottom"
+                    MinHeight="36"
+                    Padding="12,8"
+                    CornerRadius="8"
+                    Background="{DynamicResource AccentSoftBrush}">
+              <TextBlock Text="{Binding Loc[SingleDailyRollCallNote]}"
+                         FontSize="12"
+                         FontWeight="SemiBold"
+                         VerticalAlignment="Center"
+                         TextWrapping="Wrap"
+                         Foreground="{DynamicResource AccentBrush}" />
+            </Border>
+          </Grid>
+
+          <!-- Row 2: Date + Today + LessonCount + Save Indicators -->
+          <Grid ColumnDefinitions="Auto,10,Auto,16,145,16,*">
+            <StackPanel Grid.Column="0" Spacing="4">
+              <TextBlock Text="{Binding Loc[DateLabel]}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}" />
+              <DatePicker SelectedDate="{Binding SelectedDate}" />
+            </StackPanel>
+
+            <Button Grid.Column="2"
+                    Classes="secondary"
+                    VerticalAlignment="Bottom"
+                    Command="{Binding SetTodayCommand}"
+                    Content="{Binding Loc[TodayButton]}" />
+
+            <StackPanel Grid.Column="4" Spacing="4">
+              <TextBlock Text="{Binding Loc[LessonCountLabel]}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}" />
+              <NumericUpDown Value="{Binding LessonCountValue}"
+                             Minimum="1"
+                             Maximum="6"
+                             Increment="1" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="6"
+                        Orientation="Horizontal"
+                        Spacing="10"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Margin="0,0,0,4">
+              <Border IsVisible="{Binding IsSelectedDateNonSchoolDay}"
+                      Background="{DynamicResource DangerBgBrush}"
+                      CornerRadius="6"
+                      Padding="8,4"
+                      MaxWidth="240">
+                <TextBlock Text="{Binding SelectedDateCalendarBadge}"
+                           FontSize="11"
+                           FontWeight="SemiBold"
+                           TextTrimming="CharacterEllipsis"
+                           Foreground="{DynamicResource DangerTextBrush}" />
+              </Border>
+
+              <Border IsVisible="{Binding IsSelectedDateSpecialSchoolDay}"
+                      Background="{DynamicResource AccentSoftBrush}"
+                      CornerRadius="6"
+                      Padding="8,4"
+                      MaxWidth="240">
+                <TextBlock Text="{Binding SelectedDateCalendarBadge}"
+                           FontSize="11"
+                           FontWeight="SemiBold"
+                           TextTrimming="CharacterEllipsis"
+                           Foreground="{DynamicResource AccentTextBrush}" />
+              </Border>
+
+              <Border IsVisible="{Binding HasUnsavedChanges}"
+                      Background="{DynamicResource WarningBgBrush}"
+                      CornerRadius="6"
+                      Padding="8,4">
+                <TextBlock Text="{Binding Loc[UnsavedChangesBadge]}"
+                           FontSize="11"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource WarningTextBrush}" />
+              </Border>
+
+              <TextBlock Text="{Binding StatusMessage}"
+                         FontSize="12"
+                         FontWeight="SemiBold"
+                         Foreground="{DynamicResource SuccessTextBrush}"
+                         VerticalAlignment="Center"
+                         IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            </StackPanel>
+          </Grid>
+
+          <!-- Row 3: Topic Covered + Daily Activity -->
+          <Grid ColumnDefinitions="*,14,*">
+            <StackPanel Grid.Column="0" Spacing="4">
+              <TextBlock Text="{Binding Loc[TopicCoveredLabel]}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}" />
+              <TextBox Text="{Binding TopicCovered}"
+                       Watermark="{Binding Loc[TopicCoveredWatermark]}" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Spacing="4">
+              <TextBlock Text="{Binding Loc[DailyActivityLabel]}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}" />
+              <TextBox Text="{Binding DailyActivity}"
+                       Watermark="{Binding Loc[DailyActivityWatermark]}" />
+            </StackPanel>
+          </Grid>
+
+          <!-- Row 4: Quick Activity Tags + Homework Toggle + Quick Student Search -->
+          <Grid ColumnDefinitions="Auto,8,*,12,Auto,12,220" VerticalAlignment="Center">
+            <TextBlock Grid.Column="0"
+                       Text="{Binding Loc[QuickActivityTagsLabel]}"
+                       FontSize="11"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextMutedBrush}"
+                       VerticalAlignment="Center" />
+
+            <WrapPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+              <Button Classes="pill" Padding="10,4" Margin="0,0,6,4" FontSize="11"
+                      Command="{Binding AppendActivityTagCommand}" CommandParameter="ActivityTagExercises"
+                      Content="{Binding Loc[ActivityTagExercises]}" />
+              <Button Classes="pill" Padding="10,4" Margin="0,0,6,4" FontSize="11"
+                      Command="{Binding AppendActivityTagCommand}" CommandParameter="ActivityTagGroupWork"
+                      Content="{Binding Loc[ActivityTagGroupWork]}" />
+              <Button Classes="pill" Padding="10,4" Margin="0,0,6,4" FontSize="11"
+                      Command="{Binding AppendActivityTagCommand}" CommandParameter="ActivityTagReading"
+                      Content="{Binding Loc[ActivityTagReading]}" />
+              <Button Classes="pill" Padding="10,4" Margin="0,0,6,4" FontSize="11"
+                      Command="{Binding AppendActivityTagCommand}" CommandParameter="ActivityTagDiscussion"
+                      Content="{Binding Loc[ActivityTagDiscussion]}" />
+              <Button Classes="pill" Padding="10,4" Margin="0,0,6,4" FontSize="11"
+                      Command="{Binding AppendActivityTagCommand}" CommandParameter="ActivityTagPractice"
+                      Content="{Binding Loc[ActivityTagPractice]}" />
+              <Button Classes="pill" Padding="10,4" Margin="0,0,6,4" FontSize="11"
+                      Command="{Binding AppendActivityTagCommand}" CommandParameter="ActivityTagReview"
+                      Content="{Binding Loc[ActivityTagReview]}" />
+            </WrapPanel>
+
+            <Button Grid.Column="4"
+                    Classes="secondary"
+                    Command="{Binding ToggleLessonDetailsCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                <Ellipse Width="7"
+                         Height="7"
+                         Fill="{DynamicResource AccentBrush}"
+                         IsVisible="{Binding HasHomeworkOrNotes}" />
+                <TextBlock Text="{Binding Loc[MoreLessonDetailsButton]}" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+
+            <TextBox Grid.Column="6"
+                     Text="{Binding StudentSearchQuery}"
+                     Watermark="{Binding Loc[SearchStudentWatermark]}" />
+          </Grid>
+
+          <!-- Collapsible Homework & Lesson Notes -->
+          <Grid ColumnDefinitions="*,14,*" IsVisible="{Binding IsLessonDetailsExpanded}">
+            <StackPanel Grid.Column="0" Spacing="4">
+              <TextBlock Text="{Binding Loc[HomeworkLabel]}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}" />
+              <TextBox Text="{Binding Homework}"
+                       Watermark="{Binding Loc[HomeworkWatermark]}" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Spacing="4">
+              <TextBlock Text="{Binding Loc[LessonNotesLabel]}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}" />
+              <TextBox Text="{Binding LessonNotes}"
+                       Watermark="{Binding Loc[LessonNotesWatermark]}" />
+            </StackPanel>
+          </Grid>
+
+          <!-- Recent Sessions Quick-Picker Chips -->
+          <StackPanel Spacing="6" IsVisible="{Binding HasRecentSessions}">
+            <TextBlock Text="{Binding Loc[RecentSessionsLabel]}"
+                       FontSize="11"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextMutedBrush}" />
+            <ItemsControl ItemsSource="{Binding RecentSessions}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:SessionChipViewModel">
+                  <Button Classes="pill"
+                          Classes.active="{Binding IsSelected}"
+                          Margin="0,0,6,6"
+                          Command="{Binding SelectCommand}"
+                          Content="{Binding Label}" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+
+    <!-- Bottom Live Session Summary Bar -->
+    <Border DockPanel.Dock="Bottom" Classes="card" Padding="16,12" Margin="0,12,0,0">
+      <Grid ColumnDefinitions="*,12,*,12,*,12,*">
+        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+          <TextBlock Text="{Binding Loc[PresentCountLabel]}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding PresentCount}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource SuccessTextBrush}" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+          <TextBlock Text="{Binding Loc[AbsentCountLabel]}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding AbsentCount}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource DangerTextBrush}" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Grid.Column="4" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+          <TextBlock Text="{Binding Loc[JustifiedCountLabel]}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding JustifiedCount}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource WarningTextBrush}" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Grid.Column="6" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+          <TextBlock Text="{Binding Loc[AlertsBadgeLabel]}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding AlertCount}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource DangerTextBrush}" VerticalAlignment="Center" />
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <!-- Student Roll Call List -->
+    <Border Classes="card" Padding="8">
+      <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Auto">
+        <ItemsControl ItemsSource="{Binding Rows}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:StudentAttendanceRowViewModel">
+              <Border BorderBrush="{DynamicResource CardBorderBrush}"
+                      BorderThickness="0,0,0,1"
+                      Padding="14,12">
+                <Grid ColumnDefinitions="Auto,12,34,12,*,12,Auto,12,190">
+                  <controls:AvatarControl Grid.Column="0"
+                                          FullName="{Binding FullName}"
+                                          PhotoPath="{Binding PhotoPath}"
+                                          Size="40" />
+
+                  <TextBlock Grid.Column="2"
+                             Text="{Binding RollDisplay}"
+                             FontWeight="Bold"
+                             Foreground="{DynamicResource TextMutedBrush}"
+                             VerticalAlignment="Center" />
+
+                  <StackPanel Grid.Column="4" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding FullName}"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               TextTrimming="CharacterEllipsis"
+                               Foreground="{DynamicResource TextPrimaryBrush}" />
+                    <Border IsVisible="{Binding HasSpecialNeeds}"
+                            Background="{DynamicResource WarningBgBrush}"
+                            CornerRadius="4"
+                            Padding="6,2">
+                      <TextBlock Text="PDI" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource WarningTextBrush}" />
+                    </Border>
+                  </StackPanel>
+
+                  <!-- Fast P / F / FJ Toggle Buttons -->
+                  <StackPanel Grid.Column="6" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                    <Button Width="48"
+                            Height="34"
+                            CornerRadius="8"
+                            FontWeight="Bold"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Command="{Binding SetPresentCommand}"
+                            Content="{Binding Loc[PresentCode]}"
+                            Background="{Binding CurrentStatus, Converter={x:Static conv:AttendanceStatusMatchConverter.Instance}, ConverterParameter=Present}"
+                            Foreground="{Binding CurrentStatus, Converter={x:Static conv:AttendanceStatusForegroundConverter.Instance}, ConverterParameter=Present}" />
+
+                    <Button Width="48"
+                            Height="34"
+                            CornerRadius="8"
+                            FontWeight="Bold"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Command="{Binding SetAbsentCommand}"
+                            Content="{Binding Loc[AbsentCode]}"
+                            Background="{Binding CurrentStatus, Converter={x:Static conv:AttendanceStatusMatchConverter.Instance}, ConverterParameter=Absent}"
+                            Foreground="{Binding CurrentStatus, Converter={x:Static conv:AttendanceStatusForegroundConverter.Instance}, ConverterParameter=Absent}" />
+
+                    <Button Width="48"
+                            Height="34"
+                            CornerRadius="8"
+                            FontWeight="Bold"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Command="{Binding SetJustifiedCommand}"
+                            Content="{Binding Loc[JustifiedCode]}"
+                            Background="{Binding CurrentStatus, Converter={x:Static conv:AttendanceStatusMatchConverter.Instance}, ConverterParameter=Justified}"
+                            Foreground="{Binding CurrentStatus, Converter={x:Static conv:AttendanceStatusForegroundConverter.Instance}, ConverterParameter=Justified}" />
+                  </StackPanel>
+
+                  <!-- Real-Time LDB Absence Percentage Badge -->
+                  <Border Grid.Column="8"
+                          CornerRadius="8"
+                          Padding="10,6"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Right"
+                          Background="{Binding AlertStatus, Converter={x:Static conv:AlertStatusToBrushConverter.Instance}, ConverterParameter=bg}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                      <TextBlock Text="{Binding AbsencePercentageText}"
+                                 FontWeight="Bold"
+                                 FontSize="12"
+                                 Foreground="{Binding AlertStatus, Converter={x:Static conv:AlertStatusToBrushConverter.Instance}}" />
+                      <TextBlock Text="•"
+                                 FontSize="12"
+                                 Foreground="{Binding AlertStatus, Converter={x:Static conv:AlertStatusToBrushConverter.Instance}}" />
+                      <TextBlock Text="{Binding AlertLabel}"
+                                 FontSize="11"
+                                 FontWeight="SemiBold"
+                                 Foreground="{Binding AlertStatus, Converter={x:Static conv:AlertStatusToBrushConverter.Instance}}" />
+                    </StackPanel>
+                  </Border>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Border>
+  </DockPanel>
+</UserControl>

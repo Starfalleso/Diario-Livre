@@ -1,0 +1,477 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:DiarioLivre.Desktop.ViewModels"
+             xmlns:entities="using:DiarioLivre.Core.Entities"
+             mc:Ignorable="d"
+             x:Class="DiarioLivre.Desktop.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                Padding="0,0,12,0">
+    <StackPanel Spacing="22">
+
+      <!-- Header -->
+      <StackPanel Spacing="4">
+        <TextBlock Text="{Binding Loc[SettingsTitle]}"
+                   FontSize="24"
+                   FontWeight="Bold" />
+        <TextBlock Text="{Binding Loc[SettingsSubtitle]}"
+                   FontSize="13"
+                   Foreground="{DynamicResource TextMutedBrush}" />
+      </StackPanel>
+
+      <!-- Academic Year Configuration -->
+      <Border Classes="card">
+        <StackPanel Spacing="18">
+          <Grid ColumnDefinitions="Auto,10,*,16,Auto" VerticalAlignment="Center">
+            <PathIcon Grid.Column="0"
+                      Data="{StaticResource IconSettings}"
+                      Width="18"
+                      Height="18"
+                      Foreground="{DynamicResource AccentBrush}" />
+            <TextBlock Grid.Column="2"
+                       Text="{Binding Loc[AcademicYearSettingsTitle]}"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center" />
+            <StackPanel Grid.Column="4" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+              <TextBlock Text="{Binding Loc[AcademicYearLabel]}"
+                         FontSize="12"
+                         FontWeight="SemiBold"
+                         Foreground="{DynamicResource TextMutedBrush}"
+                         VerticalAlignment="Center" />
+              <ComboBox ItemsSource="{Binding AcademicYears}"
+                        SelectedItem="{Binding SelectedAcademicYear}"
+                        MinWidth="240">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate x:DataType="entities:AcademicYear">
+                    <TextBlock>
+                      <Run Text="{Binding Year}" FontWeight="SemiBold" />
+                      <Run Text=" — " />
+                      <Run Text="{Binding SchoolName}" />
+                    </TextBlock>
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </StackPanel>
+          </Grid>
+
+          <!-- Row 1: School, Year, Grading System, Target School Days -->
+          <Grid ColumnDefinitions="*,16,144,16,180,16,144">
+            <StackPanel Grid.Column="0" Spacing="6">
+              <TextBlock Text="{Binding Loc[SchoolLabel]}" FontSize="12" FontWeight="SemiBold" />
+              <TextBox Text="{Binding EditSchoolName}"
+                       Watermark="{Binding Loc[SchoolNameWatermark]}" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Spacing="6">
+              <TextBlock Text="{Binding Loc[YearLabel]}" FontSize="12" FontWeight="SemiBold" />
+              <NumericUpDown Value="{Binding EditYearValue}"
+                             Minimum="2000"
+                             Maximum="2100"
+                             Increment="1"
+                             FormatString="0" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="4" Spacing="6">
+              <TextBlock Text="{Binding Loc[GradingSystemLabel]}" FontSize="12" FontWeight="SemiBold" />
+              <ComboBox ItemsSource="{Binding GradingSystemOptions}"
+                        SelectedItem="{Binding SelectedGradingSystemOption}"
+                        HorizontalAlignment="Stretch">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:LocalizedChoice">
+                    <TextBlock Text="{Binding Label}" />
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </StackPanel>
+
+            <StackPanel Grid.Column="6" Spacing="6">
+              <TextBlock Text="{Binding Loc[TargetSchoolDaysLabel]}" FontSize="12" FontWeight="SemiBold" />
+              <NumericUpDown Value="{Binding EditTargetSchoolDays}"
+                             Minimum="1"
+                             Maximum="365"
+                             Increment="5"
+                             FormatString="0" />
+            </StackPanel>
+          </Grid>
+
+          <!-- Row 2: Default Grade Mode, Recovery Policy, Passing Grade, LDB Min Attendance -->
+          <Grid ColumnDefinitions="*,16,*,16,144,16,144">
+            <StackPanel Grid.Column="0" Spacing="6">
+              <TextBlock Text="{Binding Loc[DefaultModeLabel]}" FontSize="12" FontWeight="SemiBold" />
+              <ComboBox ItemsSource="{Binding GradeModeOptions}"
+                        SelectedItem="{Binding SelectedGradeModeOption}"
+                        HorizontalAlignment="Stretch">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:LocalizedChoice">
+                    <TextBlock Text="{Binding Label}" />
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Spacing="6">
+              <TextBlock Text="{Binding Loc[DefaultRecoveryLabel]}" FontSize="12" FontWeight="SemiBold" />
+              <ComboBox ItemsSource="{Binding RecoveryPolicyOptions}"
+                        SelectedItem="{Binding SelectedRecoveryPolicyOption}"
+                        HorizontalAlignment="Stretch">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:LocalizedChoice">
+                    <TextBlock Text="{Binding Label}" />
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </StackPanel>
+
+            <StackPanel Grid.Column="4" Spacing="6">
+              <TextBlock Text="{Binding Loc[PassingGradeLabel]}" FontSize="12" FontWeight="SemiBold" />
+              <NumericUpDown Value="{Binding EditPassingGrade}"
+                             Minimum="1"
+                             Maximum="100"
+                             Increment="0.5"
+                             FormatString="0.0" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="6" Spacing="6">
+              <TextBlock Text="{Binding Loc[MinAttendanceLabel]}" FontSize="12" FontWeight="SemiBold" />
+              <NumericUpDown Value="{Binding EditMinAttendance}"
+                             Minimum="1"
+                             Maximum="100"
+                             Increment="1"
+                             FormatString="0.#" />
+            </StackPanel>
+          </Grid>
+
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Classes="primary" Command="{Binding SaveSettingsCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <PathIcon Data="{StaticResource IconSave}" Width="15" Height="15" Foreground="White" />
+                <TextBlock Text="{Binding Loc[SaveSettingsButton]}" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Appearance & Language -->
+      <Border Classes="card">
+        <StackPanel Spacing="16">
+          <TextBlock Text="{Binding Loc[AppearanceLanguageTitle]}"
+                     FontSize="16"
+                     FontWeight="SemiBold" />
+
+          <Grid ColumnDefinitions="*,24,*">
+            <StackPanel Grid.Column="0" Spacing="8">
+              <TextBlock Text="{Binding Loc[ThemeToggleLabel]}"
+                         FontSize="12"
+                         FontWeight="SemiBold"
+                         Foreground="{DynamicResource TextMutedBrush}" />
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button Classes="pill"
+                        Classes.active="{Binding IsLightTheme}"
+                        Command="{Binding SetLightThemeCommand}">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <PathIcon Data="{StaticResource IconSun}" Width="14" Height="14" />
+                    <TextBlock Text="{Binding Loc[LightModeButton]}" VerticalAlignment="Center" />
+                  </StackPanel>
+                </Button>
+                <Button Classes="pill"
+                        Classes.active="{Binding IsDarkTheme}"
+                        Command="{Binding SetDarkThemeCommand}">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <PathIcon Data="{StaticResource IconMoon}" Width="14" Height="14" />
+                    <TextBlock Text="{Binding Loc[DarkModeButton]}" VerticalAlignment="Center" />
+                  </StackPanel>
+                </Button>
+              </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Spacing="8">
+              <TextBlock Text="{Binding Loc[LanguageLabel]}"
+                         FontSize="12"
+                         FontWeight="SemiBold"
+                         Foreground="{DynamicResource TextMutedBrush}" />
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button Classes="pill"
+                        Classes.active="{Binding Loc.IsPortuguese}"
+                        Command="{Binding SetPortugueseCommand}"
+                        Content="Português (BR)" />
+                <Button Classes="pill"
+                        Classes.active="{Binding Loc.IsEnglish}"
+                        Command="{Binding SetEnglishCommand}"
+                        Content="English (US)" />
+              </StackPanel>
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- Offline Storage & .zip Backup / Restore -->
+      <Border Classes="card">
+        <StackPanel Spacing="18">
+          <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+            <PathIcon Data="{StaticResource IconBackup}"
+                      Width="18"
+                      Height="18"
+                      Foreground="{DynamicResource AccentBrush}" />
+            <TextBlock Text="{Binding Loc[StorageBackupTitle]}"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center" />
+          </StackPanel>
+
+          <StackPanel Spacing="6">
+            <TextBlock Text="{Binding Loc[DatabasePathLabel]}"
+                       FontSize="12"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextMutedBrush}" />
+            <TextBox Text="{Binding DatabasePath}"
+                     IsReadOnly="True" />
+          </StackPanel>
+
+          <!-- Metrics row 1 -->
+          <Grid ColumnDefinitions="*,12,*,12,*,12,*">
+            <Border Grid.Column="0"
+                    Background="{DynamicResource SubtleSurfaceBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="12,10">
+              <StackPanel Spacing="2">
+                <TextBlock Text="{Binding Loc[DatabaseSizeLabel]}"
+                           FontSize="11"
+                           Foreground="{DynamicResource TextMutedBrush}" />
+                <TextBlock Text="{Binding DatabaseSizeText}"
+                           FontSize="18"
+                           FontWeight="Bold" />
+              </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2"
+                    Background="{DynamicResource SubtleSurfaceBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="12,10">
+              <StackPanel Spacing="2">
+                <TextBlock Text="{Binding Loc[AvatarsCountLabel]}"
+                           FontSize="11"
+                           Foreground="{DynamicResource TextMutedBrush}" />
+                <TextBlock Text="{Binding AvatarFilesCount}"
+                           FontSize="18"
+                           FontWeight="Bold" />
+              </StackPanel>
+            </Border>
+
+            <Border Grid.Column="4"
+                    Background="{DynamicResource SubtleSurfaceBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="12,10">
+              <StackPanel Spacing="2">
+                <TextBlock Text="{Binding Loc[TotalClassroomsKpi]}"
+                           FontSize="11"
+                           Foreground="{DynamicResource TextMutedBrush}" />
+                <TextBlock Text="{Binding ClassroomsCount}"
+                           FontSize="18"
+                           FontWeight="Bold" />
+              </StackPanel>
+            </Border>
+
+            <Border Grid.Column="6"
+                    Background="{DynamicResource SubtleSurfaceBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="12,10">
+              <StackPanel Spacing="2">
+                <TextBlock Text="{Binding Loc[TotalStudentsKpi]}"
+                           FontSize="11"
+                           Foreground="{DynamicResource TextMutedBrush}" />
+                <TextBlock Text="{Binding StudentsCount}"
+                           FontSize="18"
+                           FontWeight="Bold" />
+              </StackPanel>
+            </Border>
+          </Grid>
+
+          <!-- Metrics row 2 -->
+          <Grid ColumnDefinitions="*,12,*,12,*">
+            <Border Grid.Column="0"
+                    Background="{DynamicResource SubtleSurfaceBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="12,10">
+              <StackPanel Spacing="2">
+                <TextBlock Text="{Binding Loc[GradesCountLabel]}"
+                           FontSize="11"
+                           Foreground="{DynamicResource TextMutedBrush}" />
+                <TextBlock Text="{Binding GradesCount}"
+                           FontSize="18"
+                           FontWeight="Bold" />
+              </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2"
+                    Background="{DynamicResource SubtleSurfaceBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="12,10">
+              <StackPanel Spacing="2">
+                <TextBlock Text="{Binding Loc[SessionsCountLabel]}"
+                           FontSize="11"
+                           Foreground="{DynamicResource TextMutedBrush}" />
+                <TextBlock Text="{Binding SessionsCount}"
+                           FontSize="18"
+                           FontWeight="Bold" />
+              </StackPanel>
+            </Border>
+
+            <Border Grid.Column="4"
+                    Background="{DynamicResource SubtleSurfaceBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="12,10">
+              <StackPanel Spacing="2">
+                <TextBlock Text="{Binding Loc[ObservationsCountLabel]}"
+                           FontSize="11"
+                           Foreground="{DynamicResource TextMutedBrush}" />
+                <TextBlock Text="{Binding ObservationsCount}"
+                           FontSize="18"
+                           FontWeight="Bold" />
+              </StackPanel>
+            </Border>
+          </Grid>
+
+          <!-- Backup Actions -->
+          <WrapPanel Orientation="Horizontal">
+            <Button Classes="primary"
+                    Margin="0,0,10,8"
+                    Click="OnExportBackupClick"
+                    IsEnabled="{Binding !IsBusy}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <PathIcon Data="{StaticResource IconBackup}" Width="15" Height="15" Foreground="White" />
+                <TextBlock Text="{Binding Loc[ExportBackupButton]}" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+
+            <Button Classes="secondary"
+                    Margin="0,0,10,8"
+                    Click="OnRestoreBackupClick"
+                    IsEnabled="{Binding !IsBusy}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <PathIcon Data="{StaticResource IconRestore}" Width="15" Height="15" />
+                <TextBlock Text="{Binding Loc[RestoreBackupButton]}" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+
+            <Button Classes="secondary"
+                    Margin="0,0,10,8"
+                    Command="{Binding CreateAutoSnapshotNowCommand}"
+                    IsEnabled="{Binding !IsBusy}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <PathIcon Data="{StaticResource IconPlus}" Width="14" Height="14" />
+                <TextBlock Text="{Binding Loc[CreateSnapshotNowButton]}" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+
+            <Button Classes="secondary"
+                    Margin="0,0,10,8"
+                    Command="{Binding OpenDataFolderCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <PathIcon Data="{StaticResource IconFolder}" Width="15" Height="15" />
+                <TextBlock Text="{Binding Loc[OpenDataFolderButton]}" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+          </WrapPanel>
+
+          <!-- Auto-Backup Toggle & Recent Snapshots -->
+          <CheckBox IsChecked="{Binding AutoBackupOnStartup}"
+                    Content="{Binding Loc[AutoBackupOnStartupLabel]}" />
+
+          <StackPanel Spacing="6">
+            <TextBlock Text="{Binding Loc[AutoBackupsTitle]}"
+                       FontSize="12"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextMutedBrush}" />
+            <TextBlock Text="{Binding Loc[NoAutoBackupsText]}"
+                       IsVisible="{Binding HasNoAutoBackups}"
+                       FontSize="12"
+                       Foreground="{DynamicResource TextMutedBrush}" />
+            <ItemsControl ItemsSource="{Binding AutoBackups}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:AutoBackupItemViewModel">
+                  <Border Background="{DynamicResource SubtleSurfaceBrush}"
+                          CornerRadius="6"
+                          Padding="10,6"
+                          Margin="0,0,0,6">
+                    <Grid ColumnDefinitions="*,12,Auto,12,Auto">
+                      <TextBlock Grid.Column="0" Text="{Binding FileName}" FontSize="12" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Grid.Column="2" Text="{Binding CreatedAtDisplay}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" />
+                      <TextBlock Grid.Column="4" Text="{Binding SizeDisplay}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource AccentTextBrush}" />
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Privacy, LGPD & Optional Local PIN Lock -->
+      <Border Classes="card">
+        <StackPanel Spacing="14">
+          <Grid ColumnDefinitions="Auto,10,*,12,Auto" VerticalAlignment="Center">
+            <PathIcon Grid.Column="0"
+                      Data="{StaticResource IconLock}"
+                      Width="18"
+                      Height="18"
+                      Foreground="{DynamicResource AccentTextBrush}" />
+            <TextBlock Grid.Column="2"
+                       Text="{Binding Loc[PrivacyPinTitle]}"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center" />
+            <Button Grid.Column="4"
+                    Classes="secondary"
+                    IsVisible="{Binding HasPinConfigured}"
+                    Command="{Binding LockNowCommand}"
+                    Content="{Binding Loc[LockNowButton]}" />
+          </Grid>
+
+          <Grid ColumnDefinitions="*,16,*,16,Auto,8,Auto">
+            <StackPanel Grid.Column="0" Spacing="6">
+              <TextBlock Text="{Binding Loc[PinInputLabel]}" FontSize="12" FontWeight="SemiBold" />
+              <TextBox Text="{Binding NewPinText}" PasswordChar="•" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Spacing="6">
+              <TextBlock Text="{Binding Loc[PinConfirmLabel]}" FontSize="12" FontWeight="SemiBold" />
+              <TextBox Text="{Binding ConfirmPinText}" PasswordChar="•" />
+            </StackPanel>
+
+            <Button Grid.Column="4"
+                    Classes="primary"
+                    VerticalAlignment="Bottom"
+                    Command="{Binding SavePinCommand}"
+                    Content="{Binding Loc[SetPinButton]}" />
+
+            <Button Grid.Column="6"
+                    Classes="danger"
+                    VerticalAlignment="Bottom"
+                    IsVisible="{Binding HasPinConfigured}"
+                    Command="{Binding RemovePinCommand}"
+                    Content="{Binding Loc[RemovePinButton]}" />
+          </Grid>
+        </StackPanel>
+      </Border>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

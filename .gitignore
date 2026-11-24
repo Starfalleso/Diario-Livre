@@ -1,0 +1,27 @@
+## .NET
+bin/
+obj/
+out/
+publish/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+.vscode/
+.idea/
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+## Local offline app data
+*.db
+*.db-shm
+*.db-wal
+avatars/
+*.pdf
+
+## OS
+.DS_Store
+Thumbs.db

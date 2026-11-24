@@ -1,0 +1,394 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DiarioLivre.Desktop.ViewModels"
+             x:Class="DiarioLivre.Desktop.Views.CalendarView"
+             x:DataType="vm:CalendarViewModel">
+
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto"
+                Padding="0,0,12,0">
+    <StackPanel Spacing="18">
+      <!-- Top Header -->
+      <Grid ColumnDefinitions="*,16,Auto">
+        <StackPanel Grid.Column="0" Spacing="4">
+          <TextBlock Text="{Binding Loc[CalendarTitle]}"
+                     FontSize="24"
+                     FontWeight="Bold"
+                     TextWrapping="Wrap"
+                     Foreground="{DynamicResource TextPrimaryBrush}" />
+          <TextBlock Text="{Binding Loc[CalendarSubtitle]}"
+                     FontSize="13"
+                     TextWrapping="Wrap"
+                     Foreground="{DynamicResource TextMutedBrush}" />
+        </StackPanel>
+
+        <Button Grid.Column="2"
+                Classes="secondary"
+                VerticalAlignment="Center"
+                Command="{Binding ImportBrazilianHolidaysCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+            <PathIcon Data="{StaticResource IconPlus}" Width="13" Height="13" />
+            <TextBlock Text="{Binding Loc[ImportBrazilHolidaysButton]}" VerticalAlignment="Center" />
+          </StackPanel>
+        </Button>
+      </Grid>
+
+      <!-- LDB 200 School Days Progress & KPI Strip -->
+      <Border Classes="card">
+        <StackPanel Spacing="14">
+          <Grid ColumnDefinitions="Auto,10,*,12,Auto" VerticalAlignment="Center">
+            <TextBlock Grid.Column="0"
+                       Text="{Binding Loc[ActivePeriodLabel]}"
+                       FontSize="11"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextMutedBrush}"
+                       VerticalAlignment="Center" />
+
+            <ItemsControl Grid.Column="2" ItemsSource="{Binding TermFilterPills}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:TermPillViewModel">
+                  <Button Classes="pill"
+                          Classes.active="{Binding IsSelected}"
+                          Margin="0,0,6,0"
+                          Command="{Binding SelectCommand}"
+                          Content="{Binding Label}" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <Border Grid.Column="4"
+                    Background="{DynamicResource AccentSoftBrush}"
+                    CornerRadius="8"
+                    Padding="12,5">
+              <TextBlock Text="{Binding SchoolDaysProgressText}"
+                         FontSize="14"
+                         FontWeight="Bold"
+                         Foreground="{DynamicResource AccentTextBrush}" />
+            </Border>
+          </Grid>
+
+          <ProgressBar Minimum="0"
+                       Maximum="100"
+                       Value="{Binding SchoolDaysProgressValue}"
+                       Foreground="#22C55E"
+                       Background="{DynamicResource SubtleSurfaceBrush}" />
+
+          <Grid ColumnDefinitions="*,12,*,12,*,12,*,12,*">
+            <Border Grid.Column="0" Background="{DynamicResource SubtleSurfaceBrush}" CornerRadius="8" Padding="12,10">
+              <StackPanel Spacing="2">
+                <TextBlock Text="{Binding RecordedSchoolDays}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource SuccessTextBrush}" />
+                <TextBlock Text="{Binding Loc[RecordedSchoolDaysKpi]}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Background="{DynamicResource SubtleSurfaceBrush}" CornerRadius="8" Padding="12,10">
+              <StackPanel Spacing="2">
+                <TextBlock Text="{Binding RemainingSchoolDays}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource AccentTextBrush}" />
+                <TextBlock Text="{Binding Loc[RemainingSchoolDaysKpi]}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+
+            <Border Grid.Column="4" Background="{DynamicResource SubtleSurfaceBrush}" CornerRadius="8" Padding="12,10">
+              <StackPanel Spacing="2">
+                <TextBlock Text="{Binding PlannedMonthDays}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                <TextBlock Text="{Binding Loc[PlannedMonthDaysKpi]}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+
+            <Border Grid.Column="6" Background="{DynamicResource SubtleSurfaceBrush}" CornerRadius="8" Padding="12,10">
+              <StackPanel Spacing="2">
+                <TextBlock Text="{Binding SchoolSaturdaysCount}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource AccentTextBrush}" />
+                <TextBlock Text="{Binding Loc[SchoolSaturdaysKpi]}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+
+            <Border Grid.Column="8" Background="{DynamicResource SubtleSurfaceBrush}" CornerRadius="8" Padding="12,10">
+              <StackPanel Spacing="2">
+                <TextBlock Text="{Binding NonSchoolDaysCount}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource DangerTextBrush}" />
+                <TextBlock Text="{Binding Loc[NonSchoolDaysKpi]}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- Main Split: Interactive Monthly Grid + Event Form & List -->
+      <Grid ColumnDefinitions="1.45*,16,*">
+        <!-- Monthly Calendar Card -->
+        <Border Grid.Column="0" Classes="card" VerticalAlignment="Top">
+          <StackPanel Spacing="14">
+            <!-- Month Header Bar -->
+            <Grid ColumnDefinitions="Auto,8,*,8,Auto,8,Auto">
+              <Button Grid.Column="0"
+                      Classes="secondary"
+                      Padding="12,6"
+                      Command="{Binding PreviousMonthCommand}"
+                      Content="◀" />
+              <TextBlock Grid.Column="2"
+                         Text="{Binding CurrentMonthLabel}"
+                         FontSize="17"
+                         FontWeight="Bold"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center"
+                         Foreground="{DynamicResource TextPrimaryBrush}" />
+              <Button Grid.Column="4"
+                      Classes="secondary"
+                      Padding="12,6"
+                      Command="{Binding NextMonthCommand}"
+                      Content="▶" />
+              <Button Grid.Column="6"
+                      Classes="secondary"
+                      Command="{Binding GoToTodayCommand}"
+                      Content="{Binding Loc[TodayButton]}" />
+            </Grid>
+
+            <!-- Weekday Column Headers -->
+            <Grid ColumnDefinitions="*,*,*,*,*,*,*">
+              <TextBlock Grid.Column="0" Text="{Binding Loc[WeekdaySunShort]}" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}" />
+              <TextBlock Grid.Column="1" Text="{Binding Loc[WeekdayMonShort]}" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}" />
+              <TextBlock Grid.Column="2" Text="{Binding Loc[WeekdayTueShort]}" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}" />
+              <TextBlock Grid.Column="3" Text="{Binding Loc[WeekdayWedShort]}" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}" />
+              <TextBlock Grid.Column="4" Text="{Binding Loc[WeekdayThuShort]}" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}" />
+              <TextBlock Grid.Column="5" Text="{Binding Loc[WeekdayFriShort]}" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}" />
+              <TextBlock Grid.Column="6" Text="{Binding Loc[WeekdaySatShort]}" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}" />
+            </Grid>
+
+            <!-- 6x7 Month Grid -->
+            <ItemsControl ItemsSource="{Binding DayCells}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <UniformGrid Columns="7" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:CalendarDayCellViewModel">
+                  <Button Margin="3"
+                          Padding="6"
+                          MinHeight="66"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          HorizontalContentAlignment="Stretch"
+                          VerticalContentAlignment="Stretch"
+                          CornerRadius="8"
+                          Background="{Binding CellBackground}"
+                          BorderBrush="{Binding CellBorderBrush}"
+                          BorderThickness="{Binding CellBorderThickness}"
+                          Command="{Binding SelectCommand}">
+                    <Grid RowDefinitions="Auto,*,Auto" Opacity="{Binding ContentOpacity}">
+                      <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                        <TextBlock Grid.Column="0"
+                                   Text="{Binding DayNumberText}"
+                                   FontSize="13"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource TextPrimaryBrush}" />
+                        <Border Grid.Column="1"
+                                IsVisible="{Binding HasRecordedLesson}"
+                                Background="#16A34A"
+                                CornerRadius="8"
+                                Padding="5,1"
+                                VerticalAlignment="Center">
+                          <TextBlock Text="{Binding LessonBadgeText}"
+                                     FontSize="9.5"
+                                     FontWeight="Bold"
+                                     Foreground="White" />
+                        </Border>
+                      </Grid>
+
+                      <TextBlock Grid.Row="2"
+                                 IsVisible="{Binding HasEvent}"
+                                 Text="{Binding EventBadgeText}"
+                                 FontSize="10"
+                                 FontWeight="SemiBold"
+                                 TextTrimming="CharacterEllipsis"
+                                 Foreground="{Binding EventLabelBrush}" />
+                    </Grid>
+                  </Button>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Compact Legend -->
+            <WrapPanel Orientation="Horizontal">
+              <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,16,4">
+                <Ellipse Width="10" Height="10" Fill="#22C55E" />
+                <TextBlock Text="{Binding Loc[RecordedSchoolDaysKpi]}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" />
+              </StackPanel>
+              <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,16,4">
+                <Ellipse Width="10" Height="10" Fill="#6366F1" />
+                <TextBlock Text="{Binding Loc[SchoolSaturdaysKpi]}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" />
+              </StackPanel>
+              <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,16,4">
+                <Ellipse Width="10" Height="10" Fill="#EF4444" />
+                <TextBlock Text="{Binding Loc[NonSchoolDaysKpi]}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" />
+              </StackPanel>
+            </WrapPanel>
+          </StackPanel>
+        </Border>
+
+        <!-- Right Side: Selected Date Details, Add Event, Period Events -->
+        <StackPanel Grid.Column="2" Spacing="16">
+          <!-- Selected Date Detail Card -->
+          <Border Classes="card">
+            <StackPanel Spacing="10">
+              <TextBlock Text="{Binding Loc[SelectedDateLabel]}"
+                         FontSize="11"
+                         FontWeight="SemiBold"
+                         Foreground="{DynamicResource TextMutedBrush}" />
+              <TextBlock Text="{Binding SelectedDateDisplay}"
+                         FontSize="16"
+                         FontWeight="Bold"
+                         TextWrapping="Wrap"
+                         Foreground="{DynamicResource TextPrimaryBrush}" />
+
+              <Border IsVisible="{Binding HasSelectedDateStatus}"
+                      Background="{DynamicResource SubtleSurfaceBrush}"
+                      CornerRadius="6"
+                      Padding="10,6">
+                <TextBlock Text="{Binding SelectedDateStatusText}"
+                           FontSize="12"
+                           FontWeight="SemiBold"
+                           TextWrapping="Wrap"
+                           Foreground="{DynamicResource AccentTextBrush}" />
+              </Border>
+
+              <TextBlock Text="{Binding Loc[SelectedDateSessionsLabel]}"
+                         FontSize="12"
+                         FontWeight="SemiBold"
+                         Foreground="{DynamicResource TextPrimaryBrush}" />
+
+              <TextBlock Text="{Binding Loc[NoLessonsOnDateText]}"
+                         IsVisible="{Binding HasNoSelectedDateLessons}"
+                         FontSize="12"
+                         Foreground="{DynamicResource TextMutedBrush}" />
+
+              <ItemsControl ItemsSource="{Binding SelectedDateLessons}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="x:String">
+                    <Border Background="{DynamicResource SubtleSurfaceBrush}"
+                            CornerRadius="6"
+                            Padding="10,6"
+                            Margin="0,0,0,6">
+                      <TextBlock Text="{Binding}"
+                                 FontSize="12"
+                                 TextWrapping="Wrap"
+                                 Foreground="{DynamicResource TextPrimaryBrush}" />
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </Border>
+
+          <!-- Add Event Card -->
+          <Border Classes="card">
+            <StackPanel Spacing="12">
+              <TextBlock Text="{Binding Loc[AddCalendarEventTitle]}"
+                         FontSize="15"
+                         FontWeight="Bold"
+                         Foreground="{DynamicResource TextPrimaryBrush}" />
+
+              <Grid ColumnDefinitions="Auto,12,*">
+                <StackPanel Grid.Column="0" Spacing="4">
+                  <TextBlock Text="{Binding Loc[DateLabel]}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}" />
+                  <DatePicker SelectedDate="{Binding NewEventDate}" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Spacing="4">
+                  <TextBlock Text="{Binding Loc[EventTypeLabel]}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}" />
+                  <ComboBox ItemsSource="{Binding EventTypeOptions}"
+                            SelectedItem="{Binding SelectedEventTypeOption}"
+                            HorizontalAlignment="Stretch">
+                    <ComboBox.ItemTemplate>
+                      <DataTemplate x:DataType="vm:LocalizedChoice">
+                        <TextBlock Text="{Binding Label}" />
+                      </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                  </ComboBox>
+                </StackPanel>
+              </Grid>
+
+              <StackPanel Spacing="4">
+                <TextBlock Text="{Binding Loc[EventTitleLabel]}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}" />
+                <TextBox Text="{Binding NewEventTitle}"
+                         Watermark="{Binding Loc[EventTitleWatermark]}" />
+              </StackPanel>
+
+              <StackPanel Spacing="4">
+                <TextBlock Text="{Binding Loc[EventNotesLabel]}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}" />
+                <TextBox Text="{Binding NewEventNotes}" />
+              </StackPanel>
+
+              <Button Classes="primary"
+                      HorizontalAlignment="Right"
+                      Command="{Binding AddEventCommand}"
+                      Content="{Binding Loc[AddEventButton]}" />
+            </StackPanel>
+          </Border>
+
+          <!-- Period Events List Card -->
+          <Border Classes="card">
+            <StackPanel Spacing="10">
+              <TextBlock Text="{Binding Loc[EventsListTitle]}"
+                         FontSize="15"
+                         FontWeight="Bold"
+                         Foreground="{DynamicResource TextPrimaryBrush}" />
+
+              <TextBlock Text="{Binding Loc[NoCalendarEventsText]}"
+                         IsVisible="{Binding HasNoPeriodEvents}"
+                         FontSize="12"
+                         Foreground="{DynamicResource TextMutedBrush}" />
+
+              <ScrollViewer MaxHeight="320"
+                            HorizontalScrollBarVisibility="Disabled"
+                            VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding PeriodEvents}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:CalendarEventItemViewModel">
+                      <Border BorderBrush="{DynamicResource CardBorderBrush}"
+                              BorderThickness="0,0,0,1"
+                              Padding="4,8">
+                        <Grid ColumnDefinitions="*,10,Auto">
+                          <StackPanel Grid.Column="0" Spacing="4">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                              <TextBlock Text="{Binding DateDisplay}" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" />
+                              <Border Background="{Binding BadgeBackground}" CornerRadius="4" Padding="6,2">
+                                <TextBlock Text="{Binding TypeLabel}" FontSize="10" FontWeight="Bold" Foreground="{Binding BadgeForeground}" />
+                              </Border>
+                              <Border Background="{DynamicResource SubtleSurfaceBrush}" CornerRadius="4" Padding="6,2">
+                                <TextBlock Text="{Binding TermBadge}" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}" />
+                              </Border>
+                            </StackPanel>
+                            <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="Medium" TextWrapping="Wrap" />
+                            <TextBlock Text="{Binding Notes}"
+                                       IsVisible="{Binding HasNotes}"
+                                       FontSize="11"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource TextMutedBrush}" />
+                          </StackPanel>
+
+                          <Button Grid.Column="2"
+                                  Classes="danger"
+                                  VerticalAlignment="Center"
+                                  Padding="10,4"
+                                  MinHeight="28"
+                                  FontSize="11"
+                                  Command="{Binding DeleteCommand}"
+                                  Content="{Binding Loc[DeleteButton]}" />
+                        </Grid>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </ScrollViewer>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Grid>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
